@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\NotificationHelper;
+use App\Mail\CourseConfirmationMail;
 use App\Models\CourseEnrollment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class EnrollmentController extends Controller
 {
@@ -39,6 +42,34 @@ class EnrollmentController extends Controller
         $enrollment->update($data);
 
         return back()->with('success', 'Status enrollment berhasil diperbarui.');
+    }
+
+    public function sendConfirmation(CourseEnrollment $enrollment): RedirectResponse
+    {
+        $enrollment->load(['employee', 'course']);
+        $employee = $enrollment->employee;
+
+        if ($employee && $employee->email) {
+            Mail::to($employee->email)->queue(new CourseConfirmationMail(
+                $employee->full_name,
+                $enrollment->course->course_name,
+                $enrollment->enrollment_deadline ? (string)$enrollment->enrollment_deadline : '-',
+                route('attendance.show', $enrollment->course_id),
+                $enrollment->status
+            ));
+
+            NotificationHelper::send(
+                $employee,
+                'course_confirmation',
+                'Konfirmasi Kursus',
+                "Email konfirmasi pendaftaran untuk kursus: {$enrollment->course->course_name} telah dikirim.",
+                route('attendance.show', $enrollment->course_id)
+            );
+
+            return back()->with('success', "Email konfirmasi pendaftaran berhasil dikirim ke {$employee->email}.");
+        }
+
+        return back()->with('error', 'Gagal mengirim email: Alamat email karyawan tidak ditemukan.');
     }
 
     public function destroy(CourseEnrollment $enrollment): RedirectResponse

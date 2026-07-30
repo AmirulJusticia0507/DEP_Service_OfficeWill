@@ -51,11 +51,12 @@ class CourseAssignmentController extends Controller
 
         $employees = Employee::whereIn('id', $data['employee_ids'])->get();
         foreach ($employees as $employee) {
-            Mail::to($employee->email)->queue(new CourseAssignedMail(
+            Mail::to($employee->email)->queue(new \App\Mail\CourseConfirmationMail(
                 $employee->full_name,
                 $course->course_name,
                 $data['enrollment_deadline'],
-                config('app.url') . '/attendance/' . $course->id,
+                route('attendance.show', $course->id),
+                'TERKONFIRMASI'
             ));
 
             NotificationHelper::send(

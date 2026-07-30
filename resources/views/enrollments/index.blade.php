@@ -58,7 +58,13 @@
                 <x-status-badge status="CANCELLED">CANCELLED</x-status-badge>
             @endif
         </td>
-        <td>
+        <td class="whitespace-nowrap space-x-1">
+            <form method="POST" action="{{ route('enrollments.send-confirmation', $enr) }}" class="inline">
+                @csrf
+                <button class="text-xs bg-primary/10 text-primary hover:bg-primary/20 px-2 py-1 rounded inline-flex items-center gap-1 transition" title="Kirim Konfirmasi Email">
+                    <i class="ti ti-mail"></i> Email Konfirmasi
+                </button>
+            </form>
             @if($enr->status === 'ENROLLED')
             <form method="POST" action="{{ route('enrollments.update', $enr) }}" class="inline">
                 @csrf @method('PUT')

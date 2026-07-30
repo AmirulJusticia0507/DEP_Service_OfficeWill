@@ -69,6 +69,7 @@ Route::middleware('auth:employee')->group(function () {
     Route::post('courses/{course}/todos', [CourseController::class, 'storeTodo'])->name('courses.todos.store');
     Route::delete('todos/{todo}', [CourseController::class, 'destroyTodo'])->name('todos.destroy');
     Route::resource('enrollments', EnrollmentController::class)->except(['create', 'store']);
+    Route::post('enrollments/{enrollment}/send-confirmation', [EnrollmentController::class, 'sendConfirmation'])->name('enrollments.send-confirmation');
 
     // Attendance & completion
     Route::get('attendance', [AttendanceController::class, 'index'])->name('attendance.index');
