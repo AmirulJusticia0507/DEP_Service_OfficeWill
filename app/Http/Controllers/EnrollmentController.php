@@ -39,7 +39,26 @@ class EnrollmentController extends Controller
             'enrollment_deadline' => 'nullable|date',
         ]);
 
+        $oldStatus = $enrollment->status;
         $enrollment->update($data);
+
+        if ($data['status'] === 'CANCELLED' && $oldStatus !== 'CANCELLED') {
+            $enrollment->load(['employee', 'course']);
+            $employee = $enrollment->employee;
+            if ($employee && $employee->email) {
+                Mail::to($employee->email)->queue(new \App\Mail\CourseCancelledMail(
+                    $employee->full_name,
+                    $enrollment->course->course_name
+                ));
+
+                NotificationHelper::send(
+                    $employee,
+                    'course_cancelled',
+                    'Course Cancelled',
+                    "Your enrollment in {$enrollment->course->course_name} has been cancelled."
+                );
+            }
+        }
 
         return back()->with('success', 'Status enrollment berhasil diperbarui.');
     }
@@ -72,10 +91,50 @@ class EnrollmentController extends Controller
         return back()->with('error', 'Gagal mengirim email: Alamat email karyawan tidak ditemukan.');
     }
 
+    public function sendCancellation(CourseEnrollment $enrollment): RedirectResponse
+    {
+        $enrollment->load(['employee', 'course']);
+        $employee = $enrollment->employee;
+
+        if ($employee && $employee->email) {
+            Mail::to($employee->email)->queue(new \App\Mail\CourseCancelledMail(
+                $employee->full_name,
+                $enrollment->course->course_name
+            ));
+
+            NotificationHelper::send(
+                $employee,
+                'course_cancelled',
+                'Course Cancelled',
+                "Your enrollment in {$enrollment->course->course_name} has been cancelled."
+            );
+
+            return back()->with('success', "Email pembatalan kursus berhasil dikirim ke {$employee->email}.");
+        }
+
+        return back()->with('error', 'Gagal mengirim email: Alamat email karyawan tidak ditemukan.');
+    }
+
     public function destroy(CourseEnrollment $enrollment): RedirectResponse
     {
+        $enrollment->load(['employee', 'course']);
         $enrollment->update(['status' => 'CANCELLED']);
 
-        return back()->with('success', 'Enrollment berhasil dibatalkan.');
+        $employee = $enrollment->employee;
+        if ($employee && $employee->email) {
+            Mail::to($employee->email)->queue(new \App\Mail\CourseCancelledMail(
+                $employee->full_name,
+                $enrollment->course->course_name
+            ));
+
+            NotificationHelper::send(
+                $employee,
+                'course_cancelled',
+                'Course Cancelled',
+                "Your enrollment in {$enrollment->course->course_name} has been cancelled."
+            );
+        }
+
+        return back()->with('success', 'Enrollment berhasil dibatalkan dan email pemberitahuan telah dikirim.');
     }
 }
