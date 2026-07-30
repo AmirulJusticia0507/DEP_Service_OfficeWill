@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="overflow-hidden">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-navy-800 to-slate-900 text-white min-h-screen flex flex-col">
+<body class="bg-gradient-to-br from-slate-900 via-navy-800 to-slate-900 text-white min-h-screen flex flex-col overflow-hidden">
     <div class="flex-1 flex items-center justify-center px-4">
         <div class="max-w-lg text-center">
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-500/20 text-indigo-400 mb-6">
