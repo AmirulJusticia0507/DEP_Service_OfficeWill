@@ -38,6 +38,7 @@
                     <div class="tree-children ml-3 space-y-0.5 hidden">
                         <a href="{{ route('admin.affiliations.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60 text-[13px]">{{ __('Affiliations') }}</a>
                         <a href="{{ route('admin.positions.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60 text-[13px]">{{ __('Positions') }}</a>
+                        <a href="{{ route('admin.authorities.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60 text-[13px]">{{ __('Authorities') }}</a>
                     </div>
                 </div>
 

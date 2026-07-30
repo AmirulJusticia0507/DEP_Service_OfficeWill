@@ -53,6 +53,9 @@ Route::middleware('auth:employee')->group(function () {
     Route::post('todos/{todo}/test', [TodoController::class, 'submitTest'])->name('todos.test');
 
     Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('authorities', [\App\Http\Controllers\Admin\AuthorityController::class, 'index'])->name('authorities.index');
+        Route::put('authorities/{employee}', [\App\Http\Controllers\Admin\AuthorityController::class, 'update'])->name('authorities.update');
+
         Route::resource('affiliations', AffiliationController::class);
         Route::resource('positions', PositionController::class)->parameters(['positions' => 'position']);
 
