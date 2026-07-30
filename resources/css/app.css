@@ -56,12 +56,22 @@
 
 .bg-sidebar {
     background-color: var(--sidebar-bg);
+    transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 .dark .bg-sidebar {
     background-color: var(--sidebar-dark);
 }
-.sidebar-hover:hover {
+.sidebar-hover {
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+.sidebar-hover:hover,
+.sidebar-hover:focus-visible {
     background-color: var(--sidebar-hover);
+    outline: none;
+}
+.sidebar-link:focus,
+.sidebar-link:active {
+    outline: none;
 }
 .text-sidebar-accent {
     color: var(--sidebar-accent);
@@ -71,6 +81,7 @@
 }
 .border-sidebar {
     border-color: var(--sidebar-border);
+    transition: border-color 0.25s ease;
 }
 .bg-primary {
     background-color: var(--primary);
