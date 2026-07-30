@@ -39,7 +39,14 @@
 <x-data-table :headers="['Kursus', 'Karyawan', 'Deadline', 'Status', '']">
     @forelse ($enrollments as $enr)
     <tr>
-        <td>{{ $enr->course->course_name }}</td>
+        <td>
+            <div class="flex items-center gap-2">
+                @if ($enr->course->photo)
+                    <img src="{{ Storage::url($enr->course->photo) }}" class="w-8 h-6 object-cover rounded border border-slate-200 dark:border-slate-700">
+                @endif
+                <span>{{ $enr->course->course_name }}</span>
+            </div>
+        </td>
         <td>{{ $enr->employee->full_name }}</td>
         <td>{{ $enr->enrollment_deadline }}</td>
         <td>
