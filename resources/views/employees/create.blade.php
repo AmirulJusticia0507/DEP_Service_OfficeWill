@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Tambah Karyawan')
+@section('header-icon')
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+@endsection
 @section('breadcrumbs')
     <span class="text-slate-800 font-medium">Employee Management</span>
     <span class="text-slate-400 mx-1">/</span>
