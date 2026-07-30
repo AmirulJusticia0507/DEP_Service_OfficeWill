@@ -57,7 +57,7 @@
     <div class="min-h-screen flex">
         @auth('employee')
         {{-- Sidebar Navigation --}}
-        <aside id="sidebar" class="w-60 bg-sidebar text-white min-h-screen flex flex-col shrink-0 border-r border-sidebar">
+        <aside id="sidebar" class="w-60 bg-sidebar text-white min-h-screen flex flex-col shrink-0 border-r border-sidebar" style="background-color: var(--sidebar-bg); border-color: var(--sidebar-border);">
             <div class="flex items-center gap-2 px-4 py-4 border-b border-sidebar">
                 <img src="/officewill_logo_yogya.svg" alt="OfficeWill" class="officewill-brand-logo">
             </div>

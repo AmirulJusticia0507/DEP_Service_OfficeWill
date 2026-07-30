@@ -54,15 +54,14 @@
     --color-table-stripe: #ffffff;
 }
 
-#sidebar {
+#sidebar, .bg-sidebar {
+    background-color: var(--sidebar-bg) !important;
+    border-color: var(--sidebar-border) !important;
     color: var(--sidebar-text, #f8fafc);
     transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
-.bg-sidebar {
-    background-color: var(--sidebar-bg);
-}
-.dark .bg-sidebar {
-    background-color: var(--sidebar-dark);
+.dark #sidebar, .dark .bg-sidebar {
+    background-color: var(--sidebar-dark) !important;
 }
 .sidebar-hover {
     transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
