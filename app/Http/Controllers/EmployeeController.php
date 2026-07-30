@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class EmployeeController extends Controller
@@ -59,6 +60,10 @@ class EmployeeController extends Controller
             'kana_name' => 'nullable|max:100',
             'email' => 'required|email|unique:employees,email,NULL,id,company_id,' . $companyId,
             'phone_number' => 'nullable|max:30',
+            'place_of_birth' => 'nullable|max:255',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|in:MALE,FEMALE',
+            'address' => 'nullable',
             'authority_effective_range' => 'required|in:ONLY,BELOW,ALL',
             'authority_effective_affiliation_code' => 'nullable|max:20',
             'can_register_employee' => 'boolean',
@@ -74,6 +79,10 @@ class EmployeeController extends Controller
         $data['can_register_course'] = $request->boolean('can_register_course');
         $data['can_setting_attendance'] = $request->boolean('can_setting_attendance');
 
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('photos', 'public');
+        }
+
         $employee = Employee::create($data);
 
         Mail::to($employee->email)->send(new AccountRegisteredMail(
@@ -88,7 +97,6 @@ class EmployeeController extends Controller
 
     public function edit(Employee $employee)
     {
-        $this->authorize('view', $employee);
         $company = $employee->company;
 
         return view('employees.edit', compact('employee', 'company'));
@@ -104,6 +112,10 @@ class EmployeeController extends Controller
             'kana_name' => 'nullable|max:100',
             'email' => 'required|email|unique:employees,email,' . $employee->id . ',id,company_id,' . $companyId,
             'phone_number' => 'nullable|max:30',
+            'place_of_birth' => 'nullable|max:255',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|in:MALE,FEMALE',
+            'address' => 'nullable',
             'account_status' => 'required|in:ACTIVE,LOCKED,INACTIVE',
             'authority_effective_range' => 'required|in:ONLY,BELOW,ALL',
             'authority_effective_affiliation_code' => 'nullable|max:20',
@@ -115,6 +127,14 @@ class EmployeeController extends Controller
         $data['can_register_employee'] = $request->boolean('can_register_employee');
         $data['can_register_course'] = $request->boolean('can_register_course');
         $data['can_setting_attendance'] = $request->boolean('can_setting_attendance');
+
+        if ($request->hasFile('photo')) {
+            $request->validate(['photo' => 'image|mimes:jpg,jpeg,png|max:2048']);
+            if ($employee->photo) {
+                Storage::disk('public')->delete($employee->photo);
+            }
+            $data['photo'] = $request->file('photo')->store('photos', 'public');
+        }
 
         $employee->update($data);
 

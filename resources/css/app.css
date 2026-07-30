@@ -9,6 +9,24 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
+    --color-maroon-900: #1a0306;
+    --color-maroon-800: #2a050a;
+    --color-maroon-700: #380812;
+    --color-maroon-600: #4d0b19;
+    --color-maroon-500: #6b0f23;
+    --color-maroon-400: #8a132d;
+    --color-maroon-300: #a81838;
+    --color-maroon-200: #d41e4a;
+    --color-maroon-100: #e85a7a;
+
+    --color-gold-700: #a87c12;
+    --color-gold-600: #bf8f15;
+    --color-gold-500: #D4A017;
+    --color-gold-400: #dcb03e;
+    --color-gold-300: #e3c065;
+    --color-gold-200: #ead08c;
+    --color-gold-100: #f1dfb3;
+
     --color-navy-900: #0f172a;
     --color-navy-800: #1e293b;
     --color-navy-700: #1e3a8a;
@@ -46,7 +64,7 @@
 }
 
 .data-table th {
-    background-color: #1e3a8a;
+    background-color: #380812;
     color: white;
     padding: 8px;
     font-size: 13px;
@@ -89,8 +107,8 @@
 
 .form-input:focus {
     outline: none;
-    border-color: #0284c7;
-    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+    border-color: #D4A017;
+    box-shadow: 0 0 0 2px rgba(212, 160, 23, 0.15);
 }
 
 .dark .form-input {
@@ -110,8 +128,8 @@
 
 .form-select:focus {
     outline: none;
-    border-color: #0284c7;
-    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+    border-color: #D4A017;
+    box-shadow: 0 0 0 2px rgba(212, 160, 23, 0.15);
 }
 
 .dark .form-select {
@@ -121,16 +139,31 @@
 }
 
 .btn-primary {
-    background-color: #1e3a8a;
+    background-color: #380812;
     color: white;
     border-radius: 4px;
     padding: 6px 16px;
     font-size: 13px;
     font-weight: 500;
+    transition: background-color 0.2s;
 }
 
 .btn-primary:hover {
-    background-color: #1e40af;
+    background-color: #4d0b19;
+}
+
+.btn-gold {
+    background-color: #D4A017;
+    color: white;
+    border-radius: 4px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn-gold:hover {
+    background-color: #bf8f15;
 }
 
 .btn-secondary {
@@ -194,7 +227,6 @@
     color: #fbcfe8;
 }
 
-/* ─── Icon buttons ─────────────────────────────────────────────── */
 .icon-btn {
     display: inline-flex;
     align-items: center;
@@ -219,4 +251,86 @@
 
 .dark .icon-btn:hover {
     background: #334155;
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 360px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    z-index: 50;
+}
+
+.dark .notification-dropdown {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.notification-item {
+    padding: 10px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.notification-item:hover {
+    background: #f8fafc;
+}
+
+.dark .notification-item {
+    border-color: #334155;
+}
+
+.dark .notification-item:hover {
+    background: #0f172a;
+}
+
+.notification-item.unread {
+    border-left: 3px solid #D4A017;
+    background: #fffbeb;
+}
+
+.dark .notification-item.unread {
+    background: #2a250a;
+}
+
+.badge-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #dc2626;
+}
+
+.officewill-brand-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.branch-label-tag {
+    display: inline-block;
+    background-color: #380812;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.pulse-dot {
+    animation: pulse-dot 2s ease-in-out infinite;
 }

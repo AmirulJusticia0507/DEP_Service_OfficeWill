@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\Course\AssignCourseToEmployeesAction;
+use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use App\Mail\CourseAssignedMail;
 use App\Mail\CourseCancelledMail;
@@ -56,6 +57,14 @@ class CourseAssignmentController extends Controller
                 $data['enrollment_deadline'],
                 config('app.url') . '/attendance/' . $course->id,
             ));
+
+            NotificationHelper::send(
+                $employee,
+                'course_assigned',
+                'Course Assigned',
+                "You have been assigned to course: {$course->course_name}",
+                route('attendance.show', $course)
+            );
         }
 
         return redirect('/admin/assignments')->with('success', "Kursus ditugaskan ke {$count} karyawan.");
@@ -83,6 +92,13 @@ class CourseAssignmentController extends Controller
             $employee->full_name,
             $enrollment->course->course_name,
         ));
+
+        NotificationHelper::send(
+            $employee,
+            'course_cancelled',
+            'Course Cancelled',
+            "Your enrollment in {$enrollment->course->course_name} has been cancelled.",
+        );
 
         return back()->with('success', 'Enrollment berhasil dibatalkan.');
     }

@@ -3,21 +3,24 @@
 @section('content')
 <div class="max-w-sm mx-auto mt-24">
     <div class="bg-white dark:bg-navy-800 shadow rounded p-8">
-        <h1 class="text-xl font-bold text-center text-[#1e3a8a] mb-6">Masuk ke DEP Service</h1>
+        <div class="text-center mb-6">
+            <img src="/officewill_logo_yogya.svg" alt="OfficeWill" class="h-10 mx-auto">
+            <p class="text-xs text-maroon-600 mt-2 font-medium">DEP Service</p>
+        </div>
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">Email</label>
                 <input type="email" name="email" value="{{ old('email') }}" required
-                       class="form-input @error('email') border-[#dc2626] @enderror">
-                @error('email') <p class="text-[#dc2626] text-xs mt-1">{{ $message }}</p> @enderror
+                       class="form-input @error('email') border-red-mark @enderror">
+                @error('email') <p class="text-red-mark text-xs mt-1">{{ $message }}</p> @enderror
             </div>
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">Password</label>
                 <input type="password" name="password" required
-                       class="form-input @error('password') border-[#dc2626] @enderror">
-                @error('password') <p class="text-[#dc2626] text-xs mt-1">{{ $message }}</p> @enderror
+                       class="form-input @error('password') border-red-mark @enderror">
+                @error('password') <p class="text-red-mark text-xs mt-1">{{ $message }}</p> @enderror
             </div>
             <button type="submit" class="btn-primary w-full py-2">Masuk</button>
         </form>

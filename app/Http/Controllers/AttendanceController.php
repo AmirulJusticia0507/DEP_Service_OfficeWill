@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\NotificationHelper;
+use App\Mail\CourseCompletedMail;
+use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class AttendanceController extends Controller
 {
@@ -32,7 +38,7 @@ class AttendanceController extends Controller
             ->where('employee_id', $employee->id)
             ->firstOrFail();
 
-        $course->load('materials', 'todos');
+        $course->load('materials', 'todos', 'questions');
 
         return view('attendance.show', compact('course', 'enrollment'));
     }
@@ -45,7 +51,7 @@ class AttendanceController extends Controller
             abort(403);
         }
 
-        $enrollment->load('course.materials', 'course.todos', 'todoResponses');
+        $enrollment->load('course.materials', 'course.todos', 'course.questions', 'todoResponses');
 
         return view('attendance.todos', compact('enrollment'));
     }
@@ -60,7 +66,14 @@ class AttendanceController extends Controller
 
         $enrollment->load('course.todos', 'todoResponses.courseTodo');
 
-        return view('attendance.score', compact('enrollment'));
+        // Load exam attempts for each todo
+        $examAttempts = $enrollment->load('course.todos');
+        $attempts = \App\Models\ExamAttempt::where('enrollment_id', $enrollment->id)
+            ->with('answers.question')
+            ->get()
+            ->keyBy('course_todo_id');
+
+        return view('attendance.score', compact('enrollment', 'attempts'));
     }
 
     public function complete(CourseEnrollment $enrollment): RedirectResponse
@@ -81,6 +94,61 @@ class AttendanceController extends Controller
 
         $enrollment->update(['status' => 'COMPLETED']);
 
-        return redirect('/attendance')->with('success', 'Kursus selesai!');
+        // Send in-app notification
+        NotificationHelper::send(
+            $employee,
+            'course_completed',
+            'Course Completed',
+            "Congratulations! You completed: {$enrollment->course->course_name}",
+            route('profile.certificates')
+        );
+
+        // Auto-generate certificate
+        $certUrl = null;
+        $existing = Certificate::where('enrollment_id', $enrollment->id)->first();
+        if (!$existing) {
+            $course = $enrollment->course;
+            $certNumber = 'OW-YOG-' . str_pad($enrollment->id, 5, '0', STR_PAD_LEFT) . '-' . now()->format('Ymd');
+
+            try {
+                $pdf = Pdf::loadView('certificates.template', [
+                    'employee' => $employee,
+                    'course' => $course,
+                    'certificate_number' => $certNumber,
+                    'issued_at' => now(),
+                ]);
+
+                $filename = 'certificates/' . $certNumber . '.pdf';
+                Storage::disk('public')->put($filename, $pdf->output());
+
+                Certificate::create([
+                    'enrollment_id' => $enrollment->id,
+                    'employee_id' => $employee->id,
+                    'course_id' => $course->id,
+                    'certificate_number' => $certNumber,
+                    'file_path' => $filename,
+                    'issued_at' => now(),
+                ]);
+
+                $certUrl = route('certificates.download', Certificate::where('enrollment_id', $enrollment->id)->first());
+            } catch (\Exception $e) {
+                // PDF generation failed silently
+            }
+        } else {
+            $certUrl = route('certificates.download', $existing);
+        }
+
+        // Send email
+        try {
+            Mail::to($employee->email)->queue(new CourseCompletedMail(
+                $employee->full_name,
+                $enrollment->course->course_name,
+                $certUrl ?? route('profile.certificates'),
+            ));
+        } catch (\Exception $e) {
+            // email failed silently
+        }
+
+        return redirect('/attendance')->with('success', 'Kursus selesai! Sertifikat telah diterbitkan.');
     }
 }

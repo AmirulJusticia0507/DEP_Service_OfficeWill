@@ -14,7 +14,7 @@ class CourseController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Course::with('categoryDetail.category');
+        $query = Course::with('categoryDetail.category')->withCount('questions');
 
         if ($search = $request->get('search')) {
             $query->where('course_name', 'LIKE', "%{$search}%");
@@ -56,7 +56,7 @@ class CourseController extends Controller
 
     public function edit(Course $course)
     {
-        $course->load('materials', 'todos', 'categoryDetail.category');
+        $course->loadCount('questions')->load('materials', 'todos', 'categoryDetail.category');
         $categories = CourseCategory::with('details')->orderBy('display_order')->get();
 
         return view('courses.edit', compact('course', 'categories'));

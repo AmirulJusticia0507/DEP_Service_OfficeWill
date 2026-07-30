@@ -67,20 +67,31 @@
                     <div class="bg-slate-50 dark:bg-navy-900/50 rounded p-3 text-sm">
                         <span class="font-medium">Score:</span> {{ $response->score }}
                         @if($response->status === 'PASSED')
-                            <span class="status-badge status-badge-completed ml-2">Lulus</span>
+                            <span class="status-badge status-badge-completed ml-2">{{ __('Pass') }}</span>
                         @else
-                            <span class="text-[#dc2626] ml-2">Tidak lulus</span>
+                            <span class="text-[#dc2626] ml-2">{{ __('Fail') }}</span>
                         @endif
                     </div>
+                    @if($response->status !== 'PASSED' && $enrollment->course->questions->isNotEmpty())
+                    <a href="{{ route('exam.start', [$enrollment, $todo]) }}" class="btn-gold text-xs mt-2 inline-flex items-center gap-1">
+                        <i class="ti ti-player-play"></i> {{ __('Start Exam') }}
+                    </a>
+                    @endif
                 @else
+                    @if($enrollment->course->questions->isNotEmpty())
+                    <a href="{{ route('exam.start', [$enrollment, $todo]) }}" class="btn-gold text-xs inline-flex items-center gap-1">
+                        <i class="ti ti-player-play"></i> {{ __('Start Exam') }}
+                    </a>
+                    @else
                     <form method="POST" action="{{ route('todos.test', $todo) }}" class="flex gap-2 items-end">
                         @csrf
                         <div>
                             <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Score (0-100)</label>
                             <input type="number" name="score" min="0" max="100" required class="form-input w-24">
                         </div>
-                        <button type="submit" class="btn-primary">Grade tests</button>
+                        <button type="submit" class="btn-primary">{{ __('Score') }}</button>
                     </form>
+                    @endif
                 @endif
 
             @elseif($todo->todo_type === 'REPORT')
