@@ -108,5 +108,13 @@
     "Exam Reports": "Laporan Ujian",
     "Exam Report": "Laporan Ujian",
     "By Course": "Per Kursus",
-    "By Employee": "Per Karyawan"
+    "By Employee": "Per Karyawan",
+    "Total Employees": "Total Karyawan",
+    "Total Courses": "Total Kursus",
+    "Active Enrollments": "Enrollment Aktif",
+    "Certificates Issued": "Sertifikat Terbit",
+    "Completion Rate per Course (Top 10)": "Tingkat Penyelesaian per Kursus (Top 10)",
+    "Monthly Completions": "Penyelesaian Bulanan",
+    "Enrolled": "Terdaftar",
+    "Completed": "Selesai"
 }

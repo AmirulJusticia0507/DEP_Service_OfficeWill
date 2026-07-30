@@ -108,5 +108,13 @@
     "Exam Reports": "Exam Reports",
     "Exam Report": "Exam Report",
     "By Course": "By Course",
-    "By Employee": "By Employee"
+    "By Employee": "By Employee",
+    "Total Employees": "Total Employees",
+    "Total Courses": "Total Courses",
+    "Active Enrollments": "Active Enrollments",
+    "Certificates Issued": "Certificates Issued",
+    "Completion Rate per Course (Top 10)": "Completion Rate per Course (Top 10)",
+    "Monthly Completions": "Monthly Completions",
+    "Enrolled": "Enrolled",
+    "Completed": "Completed"
 }

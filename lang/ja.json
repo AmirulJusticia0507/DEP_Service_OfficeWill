@@ -108,5 +108,13 @@
     "Exam Reports": "試験結果レポート",
     "Exam Report": "試験結果",
     "By Course": "コース別",
-    "By Employee": "従業員別"
+    "By Employee": "従業員別",
+    "Total Employees": "総従業員数",
+    "Total Courses": "総コース数",
+    "Active Enrollments": "有効な登録",
+    "Certificates Issued": "発行済み証明書",
+    "Completion Rate per Course (Top 10)": "コース別修了率（トップ10）",
+    "Monthly Completions": "月別修了数",
+    "Enrolled": "登録中",
+    "Completed": "修了"
 }
