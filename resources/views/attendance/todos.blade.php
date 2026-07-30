@@ -11,7 +11,7 @@
     <span class="text-slate-800 dark:text-slate-100 font-medium">ToDo</span>
 @endsection
 @section('content')
-<h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Post-Course ToDo</h2>
+<h2 class="text-lg font-bold text-primary mb-4">Post-Course ToDo</h2>
 
 <x-form-section-header>Course Information</x-form-section-header>
 <div class="bg-white dark:bg-navy-800 shadow rounded mb-6 p-4 grid grid-cols-2 gap-4 text-sm">
@@ -42,7 +42,7 @@
             @if($response && $response->status === 'PASSED')
                 <span class="status-badge status-badge-completed">修了</span>
             @elseif($response && $response->status === 'FAILED')
-                <span class="text-[#dc2626] text-xs font-medium">✗ Tidak lulus ({{ $response->score }})</span>
+                <span class="text-rose-500 text-xs font-medium">✗ Tidak lulus ({{ $response->score }})</span>
             @endif
         </div>
 
@@ -69,7 +69,7 @@
                         @if($response->status === 'PASSED')
                             <span class="status-badge status-badge-completed ml-2">{{ __('Pass') }}</span>
                         @else
-                            <span class="text-[#dc2626] ml-2">{{ __('Fail') }}</span>
+                            <span class="text-rose-500 ml-2">{{ __('Fail') }}</span>
                         @endif
                     </div>
                     @if($response->status !== 'PASSED' && $enrollment->course->questions->isNotEmpty())
@@ -99,7 +99,7 @@
                     <div class="bg-slate-50 dark:bg-navy-900/50 rounded p-3 text-sm">
                         <span class="text-green-600">✓ Laporan sudah dikirim</span>
                         @if($response->response_content)
-                            <a href="{{ asset('storage/' . $response->response_content) }}" target="_blank" class="text-[#1e3a8a] hover:underline ml-2 text-xs">Lihat file</a>
+                            <a href="{{ asset('storage/' . $response->response_content) }}" target="_blank" class="text-primary hover:underline ml-2 text-xs">Lihat file</a>
                         @endif
                     </div>
                 @else

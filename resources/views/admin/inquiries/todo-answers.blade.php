@@ -9,7 +9,7 @@
     <span class="text-slate-800 dark:text-slate-100 font-medium">ToDo Answer Inquiry</span>
 @endsection
 @section('content')
-<h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Post-Learning ToDo Answer Inquiry</h2>
+<h2 class="text-lg font-bold text-primary mb-4">Post-Learning ToDo Answer Inquiry</h2>
 
 <div class="bg-white dark:bg-navy-800 rounded shadow mb-4">
     <div class="p-3 border-b border-slate-200 dark:border-b dark:border-slate-700">
@@ -40,7 +40,7 @@
 </div>
 
 @if($selectedTodo)
-    <h3 class="font-semibold text-sm mb-3 text-[#1e3a8a]">{{ $selectedTodo->course->course_name }} — {{ $selectedTodo->title }}</h3>
+    <h3 class="font-semibold text-sm mb-3 text-primary">{{ $selectedTodo->course->course_name }} — {{ $selectedTodo->title }}</h3>
 
     <x-data-table :headers="['Karyawan', 'Response', 'Score', 'Status']">
         @forelse ($responses as $r)

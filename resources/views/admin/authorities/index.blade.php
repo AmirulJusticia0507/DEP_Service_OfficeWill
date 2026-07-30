@@ -9,7 +9,7 @@
     <span class="text-slate-800 dark:text-slate-100 font-medium">User Roles</span>
 @endsection
 @section('content')
-<h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Authority & Role Management</h2>
+<h2 class="text-lg font-bold text-primary mb-4">Authority & Role Management</h2>
 
 <div class="bg-white dark:bg-navy-800 rounded shadow mb-4">
     <div class="p-3 border-b border-slate-200 dark:border-b dark:border-slate-700">

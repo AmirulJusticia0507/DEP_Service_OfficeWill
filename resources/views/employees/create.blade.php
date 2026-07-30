@@ -11,7 +11,7 @@
     <form method="POST" class="bg-white rounded shadow dark:bg-navy-800" enctype="multipart/form-data">
         @csrf
 
-        <div class="bg-maroon-700 text-white px-4 py-3 rounded-t">
+        <div class="bg-primary text-white px-4 py-3 rounded-t">
             <h3 class="text-sm font-semibold">{{ __('Add New') }} Employee</h3>
         </div>
 
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div class="bg-maroon-700 text-white px-4 py-3">
+        <div class="bg-primary text-white px-4 py-3">
             <h3 class="text-sm font-semibold">{{ __('Account Information') }}</h3>
         </div>
         <div class="p-4 space-y-3">
@@ -80,7 +80,7 @@
             </div>
         </div>
 
-        <div class="bg-maroon-700 text-white px-4 py-3">
+        <div class="bg-primary text-white px-4 py-3">
             <h3 class="text-sm font-semibold">Permissions</h3>
         </div>
         <div class="p-4 space-y-2">

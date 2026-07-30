@@ -10,7 +10,7 @@
 @endsection
 @section('content')
 <div class="flex items-center justify-between mb-4">
-    <h2 class="text-lg font-bold text-[#1e3a8a]">Affiliation Master</h2>
+    <h2 class="text-lg font-bold text-primary">Affiliation Master</h2>
     <a href="{{ route('admin.affiliations.create') }}" class="btn-primary">+ Add New Affiliation</a>
 </div>
 
@@ -22,10 +22,10 @@
         <td>{{ $aff->parent_affiliation_code ?? '-' }}</td>
         <td>{{ $aff->display_order }}</td>
         <td>
-            <a href="{{ route('admin.affiliations.edit', $aff) }}" class="text-[#1e3a8a] hover:underline text-xs font-medium">Edit</a>
+            <a href="{{ route('admin.affiliations.edit', $aff) }}" class="text-primary hover:underline text-xs font-medium">Edit</a>
             <form method="POST" action="{{ route('admin.affiliations.destroy', $aff) }}" class="inline" onsubmit="return confirm('Hapus afiliasi ini?')">
                 @csrf @method('DELETE')
-                <button class="text-[#dc2626] hover:underline text-xs ml-2">Delete</button>
+                <button class="text-rose-500 hover:underline text-xs ml-2">Delete</button>
             </form>
         </td>
     </tr>

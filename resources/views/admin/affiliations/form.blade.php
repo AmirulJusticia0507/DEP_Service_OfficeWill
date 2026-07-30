@@ -11,7 +11,7 @@
     <span class="text-slate-800 dark:text-slate-100 font-medium">{{ isset($affiliation) ? 'Edit' : 'Add New' }}</span>
 @endsection
 @section('content')
-<h2 class="text-lg font-bold text-[#1e3a8a] mb-4">{{ isset($affiliation) ? 'Edit Affiliation' : 'Add New Affiliation' }}</h2>
+<h2 class="text-lg font-bold text-primary mb-4">{{ isset($affiliation) ? 'Edit Affiliation' : 'Add New Affiliation' }}</h2>
 
 <form method="POST" class="bg-white dark:bg-navy-800 shadow rounded max-w-2xl">
     @csrf

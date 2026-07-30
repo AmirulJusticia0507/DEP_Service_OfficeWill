@@ -26,7 +26,7 @@
     <div class="space-y-4">
         @foreach($attempts as $courseName => $courseAttempts)
         <div class="bg-white rounded shadow dark:bg-navy-800">
-            <div class="px-4 py-3 bg-maroon-700 text-white rounded-t flex items-center justify-between">
+            <div class="px-4 py-3 bg-primary text-white rounded-t flex items-center justify-between">
                 <h3 class="text-sm font-semibold">{{ $courseName }}</h3>
                 <span class="text-xs text-gold-300">Attempts: {{ $courseAttempts->count() }}</span>
             </div>

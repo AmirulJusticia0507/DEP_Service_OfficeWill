@@ -10,7 +10,7 @@
 @endsection
 @section('content')
 <div class="flex items-center justify-between mb-4">
-    <h2 class="text-lg font-bold text-[#1e3a8a]">Data Karyawan</h2>
+    <h2 class="text-lg font-bold text-primary">Data Karyawan</h2>
     <a href="{{ route('employees.create') }}" class="btn-primary">+ Tambah</a>
 </div>
 
@@ -45,7 +45,7 @@
                 <x-status-badge status="CANCELLED">Nonaktif</x-status-badge>
             @endif
         </td>
-        <td><a href="{{ route('employees.edit', $emp) }}" class="text-[#1e3a8a] hover:underline text-xs font-medium">Edit</a></td>
+        <td><a href="{{ route('employees.edit', $emp) }}" class="text-accent hover:underline text-xs font-medium">Edit</a></td>
     </tr>
     @empty
     <tr><td colspan="5" class="text-center text-slate-400 dark:text-slate-500 py-6">Tidak ada data karyawan.</td></tr>

@@ -9,7 +9,7 @@
     <span class="text-slate-800 dark:text-slate-100 font-medium">Enrollment List</span>
 @endsection
 @section('content')
-<h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Enrollment Kursus</h2>
+<h2 class="text-lg font-bold text-primary mb-4">Enrollment Kursus</h2>
 
 <div class="bg-white dark:bg-navy-800 rounded shadow mb-4">
     <div class="p-3 border-b border-slate-200 dark:border-b dark:border-slate-700">
@@ -63,7 +63,7 @@
             <form method="POST" action="{{ route('enrollments.update', $enr) }}" class="inline">
                 @csrf @method('PUT')
                 <input type="hidden" name="status" value="CANCELLED">
-                <button class="text-[#dc2626] hover:underline text-xs">Batalkan</button>
+                <button class="text-rose-500 hover:underline text-xs">Batalkan</button>
             </form>
             @endif
         </td>

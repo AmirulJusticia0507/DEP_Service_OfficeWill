@@ -9,7 +9,7 @@
     <span class="text-slate-800 dark:text-slate-100 font-medium">Inquiry by Employee</span>
 @endsection
 @section('content')
-<h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Inkuiri per Karyawan</h2>
+<h2 class="text-lg font-bold text-primary mb-4">Inkuiri per Karyawan</h2>
 
 <div class="bg-white dark:bg-navy-800 rounded shadow mb-4">
     <div class="p-3 border-b border-slate-200 dark:border-b dark:border-slate-700">
@@ -29,7 +29,7 @@
 </div>
 
 @if($selectedEmployee)
-    <h3 class="font-semibold text-sm mb-3 text-[#1e3a8a]">{{ $selectedEmployee->full_name }}</h3>
+    <h3 class="font-semibold text-sm mb-3 text-primary">{{ $selectedEmployee->full_name }}</h3>
 
     <x-data-table :headers="['Kursus', 'Deadline', 'Status', 'Progress']">
         @forelse ($enrollments as $enr)

@@ -103,7 +103,7 @@
                     <span class="text-xs text-slate-400 dark:text-slate-500">— {{ $mat->content_url_or_path }}</span>
                     <form method="POST" action="{{ route('materials.destroy', $mat) }}" class="ml-auto">
                         @csrf @method('DELETE')
-                        <button class="text-[#dc2626] hover:underline text-xs">Hapus</button>
+                        <button class="text-rose-500 hover:underline text-xs">Hapus</button>
                     </form>
                 </div>
             @empty
@@ -148,7 +148,7 @@
                     <span class="text-xs text-slate-400 dark:text-slate-500">— Score: {{ $todo->passing_score ?? $course->passing_score }}</span>
                     <form method="POST" action="{{ route('todos.destroy', $todo) }}" class="ml-auto">
                         @csrf @method('DELETE')
-                        <button class="text-[#dc2626] hover:underline text-xs">Hapus</button>
+                        <button class="text-rose-500 hover:underline text-xs">Hapus</button>
                     </form>
                 </div>
             @empty

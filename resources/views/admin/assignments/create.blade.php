@@ -9,13 +9,13 @@
     <span class="text-slate-800 dark:text-slate-100 font-medium">Attendance Settings</span>
 @endsection
 @section('content')
-<h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Attendance Settings — Assign Course to Employees</h2>
+<h2 class="text-lg font-bold text-primary mb-4">Attendance Settings — Assign Course to Employees</h2>
 
 <div class="bg-white dark:bg-navy-800 shadow rounded max-w-3xl">
     {{-- Step Indicator --}}
     <div class="flex border-b border-slate-200 dark:border-b dark:border-slate-700">
-        <div class="flex-1 text-center py-3 bg-[#1e3a8a] text-white text-sm font-medium">Step 1: Select Course</div>
-        <div class="flex-1 text-center py-3 bg-[#bfdbfe] text-[#1e3a8a] text-sm font-medium">Step 2: Select Employees</div>
+        <div class="flex-1 text-center py-3 bg-primary text-white text-sm font-medium">Step 1: Select Course</div>
+        <div class="flex-1 text-center py-3 bg-primary/20 text-primary text-sm font-medium">Step 2: Select Employees</div>
     </div>
 
     <form method="POST">

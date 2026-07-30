@@ -6,7 +6,7 @@
 @endsection
 @section('content')
 <div class="bg-white rounded shadow overflow-hidden dark:bg-navy-800">
-    <div class="bg-maroon-700 text-white px-4 py-3 flex items-center justify-between">
+    <div class="bg-primary text-white px-4 py-3 flex items-center justify-between">
         <h3 class="text-sm font-semibold"><i class="ti ti-list"></i> {{ __('Employee Course List') }}</h3>
         <span class="branch-label-tag">{{ __('In Progress') }}</span>
     </div>

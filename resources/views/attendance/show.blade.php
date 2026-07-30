@@ -8,7 +8,7 @@
 @endsection
 @section('content')
 <div class="bg-white rounded shadow mb-6 overflow-hidden dark:bg-navy-800">
-    <div class="bg-maroon-700 text-white p-4">
+    <div class="bg-primary text-white p-4">
         <h1 class="text-lg font-bold">{{ $course->course_name }}</h1>
         <p class="text-xs text-gold-300 mt-0.5">{{ $course->categoryDetail->detail_name ?? '-' }}</p>
     </div>

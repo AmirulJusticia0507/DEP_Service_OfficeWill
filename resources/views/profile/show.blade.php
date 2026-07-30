@@ -7,7 +7,7 @@
 @section('content')
 <div class="max-w-3xl mx-auto">
     <div class="bg-white rounded shadow dark:bg-navy-800 overflow-hidden">
-        <div class="bg-maroon-700 p-6 text-white">
+        <div class="bg-primary p-6 text-white">
             <div class="flex items-center gap-4">
                 <div class="w-16 h-16 rounded-full bg-maroon-500 flex items-center justify-center text-2xl font-bold overflow-hidden">
                     @if($employee->photo)

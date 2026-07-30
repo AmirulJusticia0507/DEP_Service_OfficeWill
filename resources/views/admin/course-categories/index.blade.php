@@ -10,7 +10,7 @@
 @endsection
 @section('content')
 <div class="flex items-center justify-between mb-4">
-    <h2 class="text-lg font-bold text-[#1e3a8a]">Course Classification</h2>
+    <h2 class="text-lg font-bold text-primary">Course Classification</h2>
     <a href="{{ route('admin.course-categories.create') }}" class="btn-primary">+ Add New Classification</a>
 </div>
 
@@ -26,10 +26,10 @@
                 <span class="text-xs text-slate-400 dark:text-slate-500 ml-2">({{ $cat->category_code }})</span>
             </div>
             <div class="flex gap-2">
-                <a href="{{ route('admin.course-categories.edit', $cat) }}" class="text-[#1e3a8a] hover:underline text-xs font-medium">Edit</a>
+                <a href="{{ route('admin.course-categories.edit', $cat) }}" class="text-primary hover:underline text-xs font-medium">Edit</a>
                 <form method="POST" action="{{ route('admin.course-categories.destroy', $cat) }}" class="inline" onsubmit="return confirm('Hapus kategori ini?')">
                     @csrf @method('DELETE')
-                    <button class="text-[#dc2626] hover:underline text-xs">Delete</button>
+                    <button class="text-rose-500 hover:underline text-xs">Delete</button>
                 </form>
             </div>
         </div>
@@ -73,7 +73,7 @@
                         <td>
                             <form method="POST" action="{{ route('admin.course-categories.details.destroy', $det) }}" class="inline" onsubmit="return confirm('Hapus detail ini?')">
                                 @csrf @method('DELETE')
-                                <button class="text-[#dc2626] hover:underline text-xs">Delete</button>
+                                <button class="text-rose-500 hover:underline text-xs">Delete</button>
                             </form>
                         </td>
                     </tr>

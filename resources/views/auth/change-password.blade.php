@@ -10,7 +10,7 @@
 @endsection
 @section('content')
 <div class="max-w-lg mx-auto">
-    <h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Ganti Password</h2>
+    <h2 class="text-lg font-bold text-primary mb-4">Ganti Password</h2>
     <form method="POST" class="bg-white dark:bg-navy-800 shadow rounded">
         @csrf
 

@@ -9,7 +9,7 @@
     <span class="text-slate-800 dark:text-slate-100 font-medium">Course Registration</span>
 @endsection
 @section('content')
-<h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Tambah Kursus</h2>
+<h2 class="text-lg font-bold text-primary mb-4">Tambah Kursus</h2>
 
 <form method="POST" enctype="multipart/form-data" class="bg-white dark:bg-navy-800 shadow rounded max-w-2xl">
     @csrf

@@ -10,7 +10,7 @@
 @endsection
 @section('content')
 <div class="flex items-center justify-between mb-4">
-    <h2 class="text-lg font-bold text-[#1e3a8a]">Riwayat Penugasan</h2>
+    <h2 class="text-lg font-bold text-primary">Riwayat Penugasan</h2>
     <a href="{{ route('admin.assignments.create') }}" class="btn-primary">+ Tugaskan Kursus</a>
 </div>
 
@@ -33,7 +33,7 @@
             @if($a->status === 'ENROLLED')
             <form method="POST" action="{{ route('admin.assignments.cancel', $a) }}" class="inline">
                 @csrf
-                <button class="text-[#dc2626] hover:underline text-xs">Batalkan</button>
+                <button class="text-rose-500 hover:underline text-xs">Batalkan</button>
             </form>
             @endif
         </td>
