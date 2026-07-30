@@ -25,7 +25,7 @@ class AttendanceController extends Controller
             ->where('employee_id', $employee->id)
             ->where('status', 'ENROLLED')
             ->where('enrollment_deadline', '>=', Carbon::today())
-            ->paginate(10);
+            ->paginate(10)->withQueryString();
 
         return view('attendance.index', compact('enrollments'));
     }

@@ -14,7 +14,7 @@ class PositionController extends Controller
     {
         $positions = MasterJob::where('company_id', Auth::guard('employee')->user()->company_id)
             ->orderBy('display_order')
-            ->paginate(20);
+            ->paginate(20)->withQueryString();
 
         return view('admin.positions.index', compact('positions'));
     }

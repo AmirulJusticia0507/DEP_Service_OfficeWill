@@ -12,7 +12,7 @@ class CourseCategoryController extends Controller
 {
     public function index()
     {
-        $categories = CourseCategory::with('details')->orderBy('display_order')->paginate(20);
+        $categories = CourseCategory::with('details')->orderBy('display_order')->paginate(20)->withQueryString();
         return view('admin.course-categories.index', compact('categories'));
     }
 

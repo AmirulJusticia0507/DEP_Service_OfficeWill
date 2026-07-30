@@ -77,7 +77,7 @@ class CourseAssignmentController extends Controller
                 $q->where('company_id', Auth::guard('employee')->user()->company_id);
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->paginate(20)->withQueryString();
 
         return view('admin.assignments.index', compact('assignments'));
     }

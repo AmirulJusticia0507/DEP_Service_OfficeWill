@@ -25,7 +25,7 @@ class InquiryController extends Controller
                 ->whereHas('employee', function ($q) {
                     $q->where('company_id', Auth::guard('employee')->user()->company_id);
                 })
-                ->paginate(20);
+                ->paginate(20)->withQueryString();
         }
 
         return view('admin.inquiries.by-course', compact('courses', 'selectedCourse', 'enrollments'));
@@ -43,7 +43,7 @@ class InquiryController extends Controller
             $selectedEmployee = Employee::find($employeeId);
             $enrollments = CourseEnrollment::with('course', 'todoResponses')
                 ->where('employee_id', $employeeId)
-                ->paginate(20);
+                ->paginate(20)->withQueryString();
         }
 
         return view('admin.inquiries.by-employee', compact('employees', 'selectedEmployee', 'enrollments'));
@@ -66,7 +66,7 @@ class InquiryController extends Controller
             $selectedTodo = CourseTodo::with('course')->find($todoId);
             $responses = $selectedTodo?->responses()
                 ->with('enrollment.employee')
-                ->get() ?? collect();
+                ->paginate(20)->withQueryString();
         }
 
         return view('admin.inquiries.todo-answers', compact('courses', 'selectedCourse', 'selectedTodo', 'todos', 'responses'));

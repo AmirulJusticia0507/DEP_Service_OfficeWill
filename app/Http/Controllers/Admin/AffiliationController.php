@@ -14,7 +14,7 @@ class AffiliationController extends Controller
     {
         $affiliations = Affiliation::where('company_id', Auth::guard('employee')->user()->company_id)
             ->orderBy('display_order')
-            ->paginate(20);
+            ->paginate(20)->withQueryString();
 
         return view('admin.affiliations.index', compact('affiliations'));
     }

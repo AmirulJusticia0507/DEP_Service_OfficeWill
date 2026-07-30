@@ -62,5 +62,9 @@
         <tr><td colspan="4" class="text-center text-slate-400 dark:text-slate-500 py-6">Belum ada jawaban.</td></tr>
         @endforelse
     </x-data-table>
+
+    @if(method_exists($responses, 'links'))
+    <div class="mt-4">{{ $responses->links() }}</div>
+    @endif
 @endif
 @endsection

@@ -20,7 +20,7 @@ class CourseController extends Controller
             $query->where('course_name', 'LIKE', "%{$search}%");
         }
 
-        $courses = $query->paginate(20);
+        $courses = $query->paginate(20)->withQueryString();
 
         return view('courses.index', compact('courses'));
     }

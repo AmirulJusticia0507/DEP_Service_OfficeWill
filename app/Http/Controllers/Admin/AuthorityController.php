@@ -24,7 +24,7 @@ class AuthorityController extends Controller
             });
         }
 
-        $employees = $query->orderBy('is_sys_admin', 'desc')->orderBy('employee_code')->paginate(20);
+        $employees = $query->orderBy('is_sys_admin', 'desc')->orderBy('employee_code')->paginate(20)->withQueryString();
 
         return view('admin.authorities.index', compact('employees'));
     }

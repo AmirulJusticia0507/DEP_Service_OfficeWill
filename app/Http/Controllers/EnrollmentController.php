@@ -24,7 +24,7 @@ class EnrollmentController extends Controller
             $query->where('status', $status);
         }
 
-        $enrollments = $query->paginate(20);
+        $enrollments = $query->paginate(20)->withQueryString();
 
         return view('enrollments.index', compact('enrollments'));
     }
