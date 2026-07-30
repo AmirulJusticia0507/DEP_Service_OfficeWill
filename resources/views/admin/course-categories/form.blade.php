@@ -13,7 +13,7 @@
 @section('content')
 <h2 class="text-lg font-bold text-[#1e3a8a] mb-4">{{ isset($category) ? 'Edit Classification' : 'Add New Classification' }}</h2>
 
-<form method="POST" class="bg-white dark:bg-navy-800 shadow rounded max-w-2xl">
+<form method="POST" enctype="multipart/form-data" class="bg-white dark:bg-navy-800 shadow rounded max-w-2xl">
     @csrf
     @if(isset($category)) @method('PUT') @endif
 
@@ -30,6 +30,15 @@
         <div>
             <label class="block text-sm mb-1">Display Order</label>
             <input type="number" name="display_order" value="{{ old('display_order', $category->display_order ?? 0) }}" min="0" class="form-input w-24">
+        </div>
+        <div>
+            <label class="block text-sm mb-1">Icon</label>
+            <input type="file" name="icon" accept="image/png,image/jpg,image/jpeg,image/svg+xml" class="form-input">
+            @if(isset($category) && $category->icon)
+                <div class="mt-2">
+                    <img src="{{ asset('storage/' . $category->icon) }}" class="w-10 h-10 object-contain rounded border">
+                </div>
+            @endif
         </div>
     </div>
 

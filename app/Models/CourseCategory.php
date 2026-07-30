@@ -10,6 +10,7 @@ class CourseCategory extends Model
         'category_code',
         'category_name',
         'display_order',
+        'icon',
     ];
 
     public function details()

@@ -11,6 +11,7 @@ class CourseCategoryDetail extends Model
         'detail_code',
         'detail_name',
         'display_order',
+        'icon',
     ];
 
     public function category()

@@ -27,7 +27,12 @@ class CourseCategoryController extends Controller
             'category_code' => 'required|max:20|unique:course_categories,category_code',
             'category_name' => 'required|max:100',
             'display_order' => 'nullable|integer|min:0',
+            'icon' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
         ]);
+
+        if ($request->hasFile('icon')) {
+            $data['icon'] = $request->file('icon')->store('categories', 'public');
+        }
 
         CourseCategory::create($data);
 
@@ -45,7 +50,12 @@ class CourseCategoryController extends Controller
             'category_code' => 'required|max:20|unique:course_categories,category_code,' . $courseCategory->id,
             'category_name' => 'required|max:100',
             'display_order' => 'nullable|integer|min:0',
+            'icon' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
         ]);
+
+        if ($request->hasFile('icon')) {
+            $data['icon'] = $request->file('icon')->store('categories', 'public');
+        }
 
         $courseCategory->update($data);
 
@@ -66,7 +76,12 @@ class CourseCategoryController extends Controller
             'detail_code' => 'required|max:20|unique:course_category_details,detail_code',
             'detail_name' => 'required|max:100',
             'display_order' => 'nullable|integer|min:0',
+            'icon' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
         ]);
+
+        if ($request->hasFile('icon')) {
+            $data['icon'] = $request->file('icon')->store('categories/details', 'public');
+        }
 
         $courseCategory->details()->create($data);
 

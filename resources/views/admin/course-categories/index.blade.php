@@ -18,7 +18,10 @@
     @forelse ($categories as $cat)
     <div class="bg-white dark:bg-navy-800 shadow rounded">
         <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-b dark:border-slate-700">
-            <div>
+            <div class="flex items-center gap-2">
+                @if($cat->icon)
+                    <img src="{{ asset('storage/' . $cat->icon) }}" class="w-6 h-6 object-contain">
+                @endif
                 <strong class="text-sm">{{ $cat->category_name }}</strong>
                 <span class="text-xs text-slate-400 dark:text-slate-500 ml-2">({{ $cat->category_code }})</span>
             </div>
@@ -32,7 +35,7 @@
         </div>
 
         <div class="p-4">
-            <form method="POST" action="{{ route('admin.course-categories.details.store', $cat) }}" class="flex flex-wrap gap-2 mb-4 items-end">
+            <form method="POST" action="{{ route('admin.course-categories.details.store', $cat) }}" enctype="multipart/form-data" class="flex flex-wrap gap-2 mb-4 items-end">
                 @csrf
                 <div>
                     <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Detail Code</label>
@@ -46,18 +49,27 @@
                     <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Order</label>
                     <input type="number" name="display_order" placeholder="0" class="form-input w-16">
                 </div>
+                <div>
+                    <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Icon</label>
+                    <input type="file" name="icon" accept="image/png,image/jpg,image/jpeg,image/svg+xml" class="form-input text-xs w-28">
+                </div>
                 <button class="btn-primary">Add</button>
             </form>
 
             @if($cat->details->count())
             <table class="data-table">
-                <thead><tr><th>Code</th><th>Name</th><th>Order</th><th></th></tr></thead>
+                <thead><tr><th>Code</th><th>Name</th><th>Order</th><th>Icon</th><th></th></tr></thead>
                 <tbody>
                     @foreach ($cat->details as $det)
                     <tr>
                         <td>{{ $det->detail_code }}</td>
                         <td>{{ $det->detail_name }}</td>
                         <td>{{ $det->display_order }}</td>
+                        <td>
+                            @if($det->icon)
+                                <img src="{{ asset('storage/' . $det->icon) }}" class="w-6 h-6 object-contain">
+                            @endif
+                        </td>
                         <td>
                             <form method="POST" action="{{ route('admin.course-categories.details.destroy', $det) }}" class="inline" onsubmit="return confirm('Hapus detail ini?')">
                                 @csrf @method('DELETE')
