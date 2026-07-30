@@ -61,33 +61,38 @@
             <div class="flex items-center gap-2 px-4 py-4 border-b border-sidebar">
                 <img src="/officewill_logo_yogya.svg" alt="OfficeWill" class="officewill-brand-logo">
             </div>
-            @php $u = auth('employee')->user(); @endphp
+            @php
+                $u = auth('employee')->user();
+                $isMasterData = request()->routeIs('admin.affiliations.*') || request()->routeIs('admin.positions.*') || request()->routeIs('admin.authorities.*');
+                $isClassification = request()->routeIs('admin.course-categories.*');
+                $isAdministration = request()->routeIs('admin.assignments.*') || request()->routeIs('admin.inquiries.*') || request()->routeIs('admin.exam-reports.*');
+            @endphp
             <nav class="flex-1 overflow-y-auto px-3 py-4 text-sm space-y-0.5">
-                <a href="{{ route('dashboard') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover"><i class="ti ti-layout-dashboard text-sidebar-accent"></i> {{ __('Dashboard') }}</a>
+                <a href="{{ route('dashboard') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('dashboard') ? 'sidebar-active' : '' }}"><i class="ti ti-layout-dashboard text-sidebar-accent"></i> {{ __('Dashboard') }}</a>
                 @if($u->is_sys_admin || $u->can_register_employee)
-                <a href="{{ route('employees.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover"><i class="ti ti-users text-sidebar-accent"></i> {{ __('Employees') }}</a>
+                <a href="{{ route('employees.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('employees.*') ? 'sidebar-active' : '' }}"><i class="ti ti-users text-sidebar-accent"></i> {{ __('Employees') }}</a>
                 @endif
                 @if($u->is_sys_admin || $u->can_register_course)
-                <a href="{{ route('courses.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover"><i class="ti ti-book text-sidebar-accent"></i> {{ __('Courses') }}</a>
+                <a href="{{ route('courses.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('courses.*') ? 'sidebar-active' : '' }}"><i class="ti ti-book text-sidebar-accent"></i> {{ __('Courses') }}</a>
                 @endif
                 @if($u->is_sys_admin || $u->can_register_course)
-                <a href="{{ route('enrollments.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover"><i class="ti ti-clipboard-list text-sidebar-accent"></i> {{ __('Enrollments') }}</a>
+                <a href="{{ route('enrollments.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('enrollments.*') ? 'sidebar-active' : '' }}"><i class="ti ti-clipboard-list text-sidebar-accent"></i> {{ __('Enrollments') }}</a>
                 @endif
                 @if($u->is_sys_admin || $u->can_setting_attendance)
-                <a href="{{ route('attendance.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover"><i class="ti ti-calendar-check text-sidebar-accent"></i> {{ __('Attendance') }}</a>
+                <a href="{{ route('attendance.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('attendance.*') ? 'sidebar-active' : '' }}"><i class="ti ti-calendar-check text-sidebar-accent"></i> {{ __('Attendance') }}</a>
                 @endif
-                <a href="{{ route('profile.show') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover"><i class="ti ti-user-circle text-sidebar-accent"></i> {{ __('My Profile') }}</a>
+                <a href="{{ route('profile.show') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('profile.*') ? 'sidebar-active' : '' }}"><i class="ti ti-user-circle text-sidebar-accent"></i> {{ __('My Profile') }}</a>
 
                 @if($u->is_sys_admin || $u->can_register_employee)
                 <div class="tree-item mt-2">
                     <button class="tree-toggle flex items-center gap-2 w-full px-3 py-2 rounded sidebar-hover text-left text-[11px] text-sidebar-accent uppercase tracking-wider font-medium">
-                        <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200 {{ $isMasterData ? 'rotate-90' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         <i class="ti ti-database"></i> {{ __('Master Data') }}
                     </button>
-                    <div class="tree-children ml-3 space-y-0.5 hidden">
-                        <a href="{{ route('admin.affiliations.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px]"><i class="ti ti-building-community text-sidebar-accent-dim"></i> {{ __('Affiliations') }}</a>
-                        <a href="{{ route('admin.positions.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px]"><i class="ti ti-briefcase text-sidebar-accent-dim"></i> {{ __('Positions') }}</a>
-                        <a href="{{ route('admin.authorities.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px]"><i class="ti ti-shield text-sidebar-accent-dim"></i> {{ __('Authorities') }}</a>
+                    <div class="tree-children ml-3 space-y-0.5 {{ $isMasterData ? '' : 'hidden' }}">
+                        <a href="{{ route('admin.affiliations.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.affiliations.*') ? 'sidebar-active' : '' }}"><i class="ti ti-building-community text-sidebar-accent-dim"></i> {{ __('Affiliations') }}</a>
+                        <a href="{{ route('admin.positions.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.positions.*') ? 'sidebar-active' : '' }}"><i class="ti ti-briefcase text-sidebar-accent-dim"></i> {{ __('Positions') }}</a>
+                        <a href="{{ route('admin.authorities.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.authorities.*') ? 'sidebar-active' : '' }}"><i class="ti ti-shield text-sidebar-accent-dim"></i> {{ __('Authorities') }}</a>
                     </div>
                 </div>
                 @endif
@@ -95,11 +100,11 @@
                 @if($u->is_sys_admin || $u->can_register_course)
                 <div class="tree-item">
                     <button class="tree-toggle flex items-center gap-2 w-full px-3 py-2 rounded sidebar-hover text-left text-[11px] text-sidebar-accent uppercase tracking-wider font-medium">
-                        <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200 {{ $isClassification ? 'rotate-90' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         <i class="ti ti-category"></i> {{ __('Classification') }}
                     </button>
-                    <div class="tree-children ml-3 space-y-0.5 hidden">
-                        <a href="{{ route('admin.course-categories.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px]"><i class="ti ti-tags text-sidebar-accent-dim"></i> {{ __('Classification') }}</a>
+                    <div class="tree-children ml-3 space-y-0.5 {{ $isClassification ? '' : 'hidden' }}">
+                        <a href="{{ route('admin.course-categories.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.course-categories.*') ? 'sidebar-active' : '' }}"><i class="ti ti-tags text-sidebar-accent-dim"></i> {{ __('Classification') }}</a>
                     </div>
                 </div>
                 @endif
@@ -107,18 +112,18 @@
                 @if($u->is_sys_admin || $u->can_setting_attendance)
                 <div class="tree-item">
                     <button class="tree-toggle flex items-center gap-2 w-full px-3 py-2 rounded sidebar-hover text-left text-[11px] text-sidebar-accent uppercase tracking-wider font-medium">
-                        <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200 {{ $isAdministration ? 'rotate-90' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         <i class="ti ti-settings"></i> {{ __('Administration') }}
                     </button>
-                    <div class="tree-children ml-3 space-y-0.5 hidden">
-                        <a href="{{ route('admin.assignments.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px]"><i class="ti ti-mail-forward text-sidebar-accent-dim"></i> {{ __('Assignments') }}</a>
+                    <div class="tree-children ml-3 space-y-0.5 {{ $isAdministration ? '' : 'hidden' }}">
+                        <a href="{{ route('admin.assignments.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.assignments.*') ? 'sidebar-active' : '' }}"><i class="ti ti-mail-forward text-sidebar-accent-dim"></i> {{ __('Assignments') }}</a>
                         @if($u->is_sys_admin)
-                        <a href="{{ route('admin.inquiries.course') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px]"><i class="ti ti-search text-sidebar-accent-dim"></i> {{ __('Inquiry by Course') }}</a>
-                        <a href="{{ route('admin.inquiries.employee') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px]"><i class="ti ti-search text-sidebar-accent-dim"></i> {{ __('Inquiry by Employee') }}</a>
-                        <a href="{{ route('admin.inquiries.todo-answers') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px]"><i class="ti ti-list-details text-sidebar-accent-dim"></i> {{ __('ToDo Answers') }}</a>
+                        <a href="{{ route('admin.inquiries.course') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.inquiries.course') ? 'sidebar-active' : '' }}"><i class="ti ti-search text-sidebar-accent-dim"></i> {{ __('Inquiry by Course') }}</a>
+                        <a href="{{ route('admin.inquiries.employee') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.inquiries.employee') ? 'sidebar-active' : '' }}"><i class="ti ti-search text-sidebar-accent-dim"></i> {{ __('Inquiry by Employee') }}</a>
+                        <a href="{{ route('admin.inquiries.todo-answers') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.inquiries.todo-answers') ? 'sidebar-active' : '' }}"><i class="ti ti-list-details text-sidebar-accent-dim"></i> {{ __('ToDo Answers') }}</a>
                         @endif
                         @if($u->is_sys_admin || $u->can_register_course)
-                        <a href="{{ route('admin.exam-reports.by-course') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px]"><i class="ti ti-report-analytics text-sidebar-accent-dim"></i> {{ __('Exam Reports') }}</a>
+                        <a href="{{ route('admin.exam-reports.by-course') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.exam-reports.*') ? 'sidebar-active' : '' }}"><i class="ti ti-report-analytics text-sidebar-accent-dim"></i> {{ __('Exam Reports') }}</a>
                         @endif
                     </div>
                 </div>
