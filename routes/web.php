@@ -12,7 +12,9 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\TodoController;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 Route::redirect('/', '/login');
 
@@ -67,4 +69,13 @@ Route::middleware('auth:employee')->group(function () {
         Route::get('inquiries/employee', [InquiryController::class, 'byEmployee'])->name('inquiries.employee');
         Route::get('inquiries/todo-answers', [InquiryController::class, 'todoAnswers'])->name('inquiries.todo-answers');
     });
+
+    Route::post('locale/switch', function (\Illuminate\Http\Request $request) {
+        $locale = $request->input('locale', 'en');
+        if (in_array($locale, ['en', 'ja'])) {
+            Session::put('locale', $locale);
+            App::setLocale($locale);
+        }
+        return redirect()->back();
+    })->name('locale.switch');
 });
