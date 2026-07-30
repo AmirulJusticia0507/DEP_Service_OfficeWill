@@ -20,25 +20,50 @@
         {{-- Sidebar Navigation --}}
         <aside class="w-60 bg-navy-800 text-white min-h-screen flex flex-col shrink-0 dark:bg-[#0f172a]">
             <div class="text-lg font-bold px-4 py-5 border-b border-slate-700">DEP Service</div>
-            <nav class="flex-1 px-3 py-4 space-y-0.5 text-sm">
+            <nav class="flex-1 overflow-y-auto px-3 py-4 text-sm space-y-0.5">
+                {{-- Single items --}}
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('Dashboard') }}</a>
                 <a href="{{ route('employees.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('Employees') }}</a>
                 <a href="{{ route('courses.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('Courses') }}</a>
                 <a href="{{ route('enrollments.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('Enrollments') }}</a>
                 <a href="{{ route('attendance.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('Attendance') }}</a>
-                <hr class="my-2 border-slate-700">
-                <p class="px-3 text-[11px] text-slate-400 uppercase tracking-wider font-medium">{{ __('Master Data') }}</p>
-                <a href="{{ route('admin.affiliations.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('Affiliations') }}</a>
-                <a href="{{ route('admin.positions.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('Positions') }}</a>
-                <hr class="my-2 border-slate-700">
-                <p class="px-3 text-[11px] text-slate-400 uppercase tracking-wider font-medium">{{ __('Courses') }}</p>
-                <a href="{{ route('admin.course-categories.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('Classification') }}</a>
-                <hr class="my-2 border-slate-700">
-                <p class="px-3 text-[11px] text-slate-400 uppercase tracking-wider font-medium">{{ __('Administration') }}</p>
-                <a href="{{ route('admin.assignments.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('Assignments') }}</a>
-                <a href="{{ route('admin.inquiries.course') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('Inquiry by Course') }}</a>
-                <a href="{{ route('admin.inquiries.employee') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('Inquiry by Employee') }}</a>
-                <a href="{{ route('admin.inquiries.todo-answers') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60">{{ __('ToDo Answers') }}</a>
+
+                {{-- Master Data --}}
+                <div class="tree-item">
+                    <button class="tree-toggle flex items-center gap-2 w-full px-3 py-2 rounded hover:bg-slate-700/60 text-left text-[11px] text-slate-400 uppercase tracking-wider font-medium">
+                        <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        {{ __('Master Data') }}
+                    </button>
+                    <div class="tree-children ml-3 space-y-0.5 hidden">
+                        <a href="{{ route('admin.affiliations.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60 text-[13px]">{{ __('Affiliations') }}</a>
+                        <a href="{{ route('admin.positions.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60 text-[13px]">{{ __('Positions') }}</a>
+                    </div>
+                </div>
+
+                {{-- Course Classification --}}
+                <div class="tree-item">
+                    <button class="tree-toggle flex items-center gap-2 w-full px-3 py-2 rounded hover:bg-slate-700/60 text-left text-[11px] text-slate-400 uppercase tracking-wider font-medium">
+                        <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        {{ __('Classification') }}
+                    </button>
+                    <div class="tree-children ml-3 space-y-0.5 hidden">
+                        <a href="{{ route('admin.course-categories.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60 text-[13px]">{{ __('Classification') }}</a>
+                    </div>
+                </div>
+
+                {{-- Administration --}}
+                <div class="tree-item">
+                    <button class="tree-toggle flex items-center gap-2 w-full px-3 py-2 rounded hover:bg-slate-700/60 text-left text-[11px] text-slate-400 uppercase tracking-wider font-medium">
+                        <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        {{ __('Administration') }}
+                    </button>
+                    <div class="tree-children ml-3 space-y-0.5 hidden">
+                        <a href="{{ route('admin.assignments.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60 text-[13px]">{{ __('Assignments') }}</a>
+                        <a href="{{ route('admin.inquiries.course') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60 text-[13px]">{{ __('Inquiry by Course') }}</a>
+                        <a href="{{ route('admin.inquiries.employee') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60 text-[13px]">{{ __('Inquiry by Employee') }}</a>
+                        <a href="{{ route('admin.inquiries.todo-answers') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-700/60 text-[13px]">{{ __('ToDo Answers') }}</a>
+                    </div>
+                </div>
             </nav>
             <div class="border-t border-slate-700 px-3 py-3 space-y-1 text-xs">
                 <button id="darkModeToggle" class="flex items-center gap-2 w-full px-3 py-2 rounded hover:bg-slate-700/60">
@@ -47,7 +72,7 @@
                 </button>
                 <button id="langToggle" class="flex items-center gap-2 w-full px-3 py-2 rounded hover:bg-slate-700/60">
                     <span>🌐</span>
-                    <span>{{ app()->getLocale() === 'ja' ? 'English' : '日本語' }}</span>
+                    <span id="langLabel">{{ locale_label(app()->getLocale()) }}</span>
                 </button>
                 <form id="langForm" method="POST" action="{{ route('locale.switch') }}" class="hidden">
                     @csrf
@@ -130,14 +155,38 @@
         const langBtn = document.getElementById('langToggle');
         const langForm = document.getElementById('langForm');
         const localeInput = document.getElementById('localeInput');
+        const langLabel = document.getElementById('langLabel');
 
         if (langBtn && langForm) {
             langBtn.addEventListener('click', function() {
                 const current = '{{ app()->getLocale() }}';
-                localeInput.value = current === 'ja' ? 'en' : 'ja';
+                const locales = ['en', 'ja', 'id'];
+                const idx = locales.indexOf(current);
+                const next = locales[(idx + 1) % locales.length];
+                localeInput.value = next;
                 langForm.submit();
             });
         }
+
+        // ─── Tree View (accordion) ──────────────────────────────────────
+        document.querySelectorAll('.tree-toggle').forEach(function(btn) {
+            const children = btn.nextElementSibling;
+            const arrow = btn.querySelector('.tree-arrow');
+            if (children) {
+                // persist open state
+                const key = 'tree_' + btoa(btn.textContent.trim());
+                if (localStorage.getItem(key) === 'open') {
+                    children.classList.remove('hidden');
+                    if (arrow) arrow.classList.add('rotate-90');
+                }
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    children.classList.toggle('hidden');
+                    if (arrow) arrow.classList.toggle('rotate-90');
+                    localStorage.setItem(key, children.classList.contains('hidden') ? 'closed' : 'open');
+                });
+            }
+        });
     });
     </script>
 </body>

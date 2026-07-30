@@ -72,7 +72,7 @@ Route::middleware('auth:employee')->group(function () {
 
     Route::post('locale/switch', function (\Illuminate\Http\Request $request) {
         $locale = $request->input('locale', 'en');
-        if (in_array($locale, ['en', 'ja'])) {
+        if (in_array($locale, ['en', 'ja', 'id'])) {
             Session::put('locale', $locale);
             App::setLocale($locale);
         }
