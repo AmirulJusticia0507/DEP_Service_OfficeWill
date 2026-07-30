@@ -55,7 +55,7 @@
                                 @elseif($en->status === 'COMPLETED')
                                     <form method="POST" action="{{ route('certificates.generate', $en) }}">
                                         @csrf
-                                        <button class="text-maroon-600 hover:underline text-xs flex items-center gap-1"><i class="ti ti-certificate"></i> Generate</button>
+                                        <button class="text-accent hover:underline text-xs flex items-center gap-1"><i class="ti ti-certificate"></i> Generate</button>
                                     </form>
                                 @else
                                     <span class="text-xs text-slate-400">-</span>

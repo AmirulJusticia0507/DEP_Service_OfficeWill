@@ -15,7 +15,7 @@
         @foreach($certificates as $cert)
         <div class="bg-white rounded shadow p-4 flex items-center justify-between dark:bg-navy-800">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded bg-maroon-100 dark:bg-maroon-900 flex items-center justify-center text-maroon-700 dark:text-gold-400">
+                <div class="w-10 h-10 rounded bg-primary/10 flex items-center justify-center text-accent">
                     <i class="ti ti-certificate text-lg"></i>
                 </div>
                 <div>

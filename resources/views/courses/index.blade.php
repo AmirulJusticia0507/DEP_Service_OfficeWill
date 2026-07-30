@@ -6,7 +6,7 @@
 @endsection
 @section('content')
 <div class="flex items-center justify-between mb-4">
-    <h2 class="text-lg font-bold text-maroon-700 dark:text-gold-400">{{ __('Courses') }}</h2>
+    <h2 class="text-lg font-bold text-accent">{{ __('Courses') }}</h2>
     <a href="{{ route('courses.create') }}" class="btn-primary flex items-center gap-1"><i class="ti ti-plus"></i> {{ __('Add New') }}</a>
 </div>
 
@@ -37,7 +37,7 @@
             <td>{{ $course->passing_score }}</td>
             <td class="text-center">{{ $course->has_retest ? 'Ya' : '-' }}</td>
             <td>
-                <a href="{{ route('admin.questions.index', $course) }}" class="text-maroon-600 hover:underline text-xs font-medium flex items-center gap-1">
+                <a href="{{ route('admin.questions.index', $course) }}" class="text-accent hover:underline text-xs font-medium flex items-center gap-1">
                     <i class="ti ti-question-mark"></i> {{ $course->questions_count ?? 0 }} soal
                 </a>
             </td>

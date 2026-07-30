@@ -8,17 +8,17 @@
 @endsection
 @section('content')
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-    <div class="bg-white shadow rounded p-5 border-t-2 border-maroon-700 dark:bg-navy-800">
+    <div class="bg-white shadow rounded p-5 border-t-2 border-primary dark:bg-navy-800">
         <p class="text-xs text-slate-500 font-medium uppercase tracking-wide dark:text-slate-300">{{ __('Total Employees') }}</p>
         <p class="text-2xl font-bold mt-1 dark:text-white">{{ $stats['total_employees'] }}</p>
     </div>
-    <div class="bg-white shadow rounded p-5 border-t-2 border-maroon-700 dark:bg-navy-800">
+    <div class="bg-white shadow rounded p-5 border-t-2 border-primary dark:bg-navy-800">
         <p class="text-xs text-slate-500 font-medium uppercase tracking-wide dark:text-slate-300">{{ __('Total Courses') }}</p>
         <p class="text-2xl font-bold mt-1 dark:text-white">{{ $stats['total_courses'] }}</p>
     </div>
-    <div class="bg-white shadow rounded p-5 border-t-2 border-gold-500 dark:bg-navy-800">
+    <div class="bg-white shadow rounded p-5 border-t-2 border-accent dark:bg-navy-800">
         <p class="text-xs text-slate-500 font-medium uppercase tracking-wide dark:text-slate-300">{{ __('Active Enrollments') }}</p>
-        <p class="text-2xl font-bold mt-1 text-gold-600 dark:text-gold-400">{{ $stats['active_enrollments'] }}</p>
+        <p class="text-2xl font-bold mt-1 text-accent dark:text-accent">{{ $stats['active_enrollments'] }}</p>
     </div>
     <div class="bg-white shadow rounded p-5 border-t-2 border-emerald-500 dark:bg-navy-800">
         <p class="text-xs text-slate-500 font-medium uppercase tracking-wide dark:text-slate-300">{{ __('Completed') }}</p>
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data: {
             labels: {!! $chartLabels !!},
             datasets: [
-                { label: '{{ __('Enrolled') }}', data: {!! $chartEnrolled !!}, backgroundColor: '#D4A01760', borderColor: '#D4A017', borderWidth: 1 },
+                { label: '{{ __('Enrolled') }}', data: {!! $chartEnrolled !!}, backgroundColor: 'var(--accent)', borderColor: 'var(--accent)', borderWidth: 1 },
                 { label: '{{ __('Completed') }}', data: {!! $chartCompleted !!}, backgroundColor: '#10b98160', borderColor: '#10b981', borderWidth: 1 }
             ]
         },
@@ -70,12 +70,12 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: '{{ __('Completed') }}',
                 data: {!! $monthlyCounts !!},
-                borderColor: '#380812',
-                backgroundColor: '#38081220',
+                borderColor: 'var(--primary)',
+                backgroundColor: 'var(--primary)',
                 fill: true,
                 tension: 0.3,
-                pointBackgroundColor: '#D4A017',
-                pointBorderColor: '#D4A017',
+                pointBackgroundColor: 'var(--accent)',
+                pointBorderColor: 'var(--accent)',
             }]
         },
         options: {

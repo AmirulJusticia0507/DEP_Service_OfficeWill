@@ -5,7 +5,7 @@
     <div class="bg-white dark:bg-navy-800 shadow rounded p-8">
         <div class="text-center mb-6">
             <img src="/officewill_logo_yogya.svg" alt="OfficeWill" class="h-10 mx-auto">
-            <p class="text-xs text-maroon-600 mt-2 font-medium">DEP Service</p>
+            <p class="text-xs text-accent mt-2 font-medium">DEP Service</p>
         </div>
 
         <form method="POST" action="{{ route('login') }}">

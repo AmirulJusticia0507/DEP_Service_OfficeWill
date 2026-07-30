@@ -11,7 +11,7 @@
     <span class="text-slate-800 dark:text-slate-100 font-medium">Course Edit</span>
 @endsection
 @section('content')
-<h2 class="text-lg font-bold text-maroon-700 dark:text-gold-400 mb-4">{{ __('Edit') }}: {{ $course->course_name }}</h2>
+<h2 class="text-lg font-bold text-accent mb-4">{{ __('Edit') }}: {{ $course->course_name }}</h2>
 
 <div class="mb-4 flex items-center gap-2">
     <a href="{{ route('admin.questions.index', $course) }}" class="btn-gold text-xs flex items-center gap-1"><i class="ti ti-question-mark"></i> {{ __('Question Bank') }} ({{ $course->questions_count ?? 0 }})</a>

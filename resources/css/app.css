@@ -5,6 +5,20 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+:root {
+    --sidebar-bg: #380812;
+    --sidebar-hover: rgba(77, 11, 25, 0.6);
+    --sidebar-border: #4d0b19;
+    --sidebar-dark: #1a0306;
+    --sidebar-accent: #D4A017;
+    --sidebar-accent-dim: rgba(212, 160, 23, 0.6);
+    --primary: #380812;
+    --primary-dark: #2a050a;
+    --accent: #D4A017;
+    --accent-light: #dcb03e;
+    --header-icon: #D4A017;
+}
+
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
@@ -38,6 +52,20 @@
     --color-table-stripe: #ffffff;
 }
 
+.bg-sidebar { background-color: var(--sidebar-bg); }
+.dark .bg-sidebar { background-color: var(--sidebar-dark); }
+.sidebar-hover:hover { background-color: var(--sidebar-hover); }
+.text-sidebar-accent { color: var(--sidebar-accent); }
+.text-sidebar-accent-dim { color: var(--sidebar-accent-dim); }
+.border-sidebar { border-color: var(--sidebar-border); }
+.bg-primary { background-color: var(--primary); }
+.text-accent { color: var(--accent); }
+.text-accent-light { color: var(--accent-light); }
+.border-accent { border-color: var(--accent); }
+.border-primary { border-color: var(--primary); }
+.text-header-icon { color: var(--header-icon); }
+.accent-primary { accent-color: var(--primary); }
+
 .form-section-header {
     background-color: #bfdbfe;
     color: #1e3a8a;
@@ -64,7 +92,7 @@
 }
 
 .data-table th {
-    background-color: #380812;
+    background-color: var(--primary);
     color: white;
     padding: 8px;
     font-size: 13px;
@@ -139,7 +167,7 @@
 }
 
 .btn-primary {
-    background-color: #380812;
+    background-color: var(--primary);
     color: white;
     border-radius: 4px;
     padding: 6px 16px;
@@ -149,11 +177,11 @@
 }
 
 .btn-primary:hover {
-    background-color: #4d0b19;
+    background-color: var(--primary-dark);
 }
 
 .btn-gold {
-    background-color: #D4A017;
+    background-color: var(--accent);
     color: white;
     border-radius: 4px;
     padding: 6px 16px;
@@ -163,7 +191,7 @@
 }
 
 .btn-gold:hover {
-    background-color: #bf8f15;
+    background-color: var(--accent-light);
 }
 
 .btn-secondary {
@@ -293,7 +321,7 @@
 }
 
 .notification-item.unread {
-    border-left: 3px solid #D4A017;
+    border-left: 3px solid var(--accent);
     background: #fffbeb;
 }
 
@@ -317,7 +345,7 @@
 
 .branch-label-tag {
     display: inline-block;
-    background-color: #380812;
+    background-color: var(--primary);
     color: #ffffff;
     font-size: 11px;
     font-weight: 600;
