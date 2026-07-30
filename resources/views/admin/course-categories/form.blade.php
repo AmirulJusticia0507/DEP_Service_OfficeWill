@@ -4,16 +4,16 @@
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
 @endsection
 @section('breadcrumbs')
-    <span class="text-slate-800 font-medium">Course Registration</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">Course Classification</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">{{ isset($category) ? 'Edit' : 'Add New' }}</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Course Registration</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Course Classification</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">{{ isset($category) ? 'Edit' : 'Add New' }}</span>
 @endsection
 @section('content')
 <h2 class="text-lg font-bold text-[#1e3a8a] mb-4">{{ isset($category) ? 'Edit Classification' : 'Add New Classification' }}</h2>
 
-<form method="POST" class="bg-white shadow rounded max-w-2xl">
+<form method="POST" class="bg-white dark:bg-navy-800 shadow rounded max-w-2xl">
     @csrf
     @if(isset($category)) @method('PUT') @endif
 
@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <x-action-buttons align="left" class="p-4 border-t border-slate-200">
+    <x-action-buttons align="left" class="p-4 border-t border-slate-200 dark:border-t dark:border-slate-700">
         <button type="submit" class="btn-primary">{{ isset($category) ? 'Update' : 'Save' }}</button>
         <a href="{{ route('admin.course-categories.index') }}" class="btn-secondary">Cancel</a>
     </x-action-buttons>

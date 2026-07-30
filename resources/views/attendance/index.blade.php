@@ -4,9 +4,9 @@
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
 @endsection
 @section('breadcrumbs')
-    <span class="text-slate-800 font-medium">In-house training</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">Confirm and attend courses</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">In-house training</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Confirm and attend courses</span>
 @endsection
 @section('content')
 <h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Employee Course List</h2>
@@ -18,7 +18,7 @@
         $completedTodos = $enr->todoResponses->count();
         $hasFailed = $enr->todoResponses->where('status', 'FAILED')->isNotEmpty();
     @endphp
-    <tr class="cursor-pointer hover:bg-slate-50" onclick="window.location='{{ route('attendance.show', $enr->course_id) }}'">
+    <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-700/50" onclick="window.location='{{ route('attendance.show', $enr->course_id) }}'">
         <td class="font-medium">{{ $enr->course->course_name }}</td>
         <td>{{ $enr->course->categoryDetail->detail_name ?? '-' }}</td>
         <td>{{ $enr->enrollment_deadline }}</td>
@@ -33,7 +33,7 @@
         </td>
     </tr>
     @empty
-    <tr><td colspan="4" class="text-center text-slate-400 py-6">Tidak ada kursus aktif.</td></tr>
+    <tr><td colspan="4" class="text-center text-slate-400 dark:text-slate-500 py-6">Tidak ada kursus aktif.</td></tr>
     @endforelse
 </x-data-table>
 

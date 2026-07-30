@@ -4,9 +4,9 @@
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
 @endsection
 @section('breadcrumbs')
-    <span class="text-slate-800 font-medium">Course Registration</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">Course Classification</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Course Registration</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Course Classification</span>
 @endsection
 @section('content')
 <div class="flex items-center justify-between mb-4">
@@ -16,11 +16,11 @@
 
 <div class="space-y-6">
     @forelse ($categories as $cat)
-    <div class="bg-white shadow rounded">
-        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+    <div class="bg-white dark:bg-navy-800 shadow rounded">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-b dark:border-slate-700">
             <div>
                 <strong class="text-sm">{{ $cat->category_name }}</strong>
-                <span class="text-xs text-slate-400 ml-2">({{ $cat->category_code }})</span>
+                <span class="text-xs text-slate-400 dark:text-slate-500 ml-2">({{ $cat->category_code }})</span>
             </div>
             <div class="flex gap-2">
                 <a href="{{ route('admin.course-categories.edit', $cat) }}" class="text-[#1e3a8a] hover:underline text-xs font-medium">Edit</a>
@@ -35,15 +35,15 @@
             <form method="POST" action="{{ route('admin.course-categories.details.store', $cat) }}" class="flex flex-wrap gap-2 mb-4 items-end">
                 @csrf
                 <div>
-                    <label class="text-xs text-slate-500 block mb-0.5">Detail Code</label>
+                    <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Detail Code</label>
                     <input type="text" name="detail_code" placeholder="Code" required class="form-input w-28">
                 </div>
                 <div>
-                    <label class="text-xs text-slate-500 block mb-0.5">Detail Name</label>
+                    <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Detail Name</label>
                     <input type="text" name="detail_name" placeholder="Name" required class="form-input w-48">
                 </div>
                 <div>
-                    <label class="text-xs text-slate-500 block mb-0.5">Order</label>
+                    <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Order</label>
                     <input type="number" name="display_order" placeholder="0" class="form-input w-16">
                 </div>
                 <button class="btn-primary">Add</button>
@@ -69,12 +69,12 @@
                 </tbody>
             </table>
             @else
-            <p class="text-sm text-slate-400">Belum ada detail kategori.</p>
+            <p class="text-sm text-slate-400 dark:text-slate-500">Belum ada detail kategori.</p>
             @endif
         </div>
     </div>
     @empty
-    <div class="bg-white shadow rounded p-6 text-center text-slate-400">Tidak ada kategori.</div>
+    <div class="bg-white dark:bg-navy-800 shadow rounded p-6 text-center text-slate-400 dark:text-slate-500">Tidak ada kategori.</div>
     @endforelse
 </div>
 

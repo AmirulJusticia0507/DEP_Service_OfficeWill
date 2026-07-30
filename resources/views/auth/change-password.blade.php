@@ -4,14 +4,14 @@
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
 @endsection
 @section('breadcrumbs')
-    <span class="text-slate-800 font-medium">Account Settings</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">Change Password</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Account Settings</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Change Password</span>
 @endsection
 @section('content')
 <div class="max-w-lg mx-auto">
     <h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Ganti Password</h2>
-    <form method="POST" class="bg-white shadow rounded">
+    <form method="POST" class="bg-white dark:bg-navy-800 shadow rounded">
         @csrf
 
         <x-form-section-header>Password Change</x-form-section-header>
@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <x-action-buttons align="left" class="p-4 border-t border-slate-200">
+        <x-action-buttons align="left" class="p-4 border-t border-slate-200 dark:border-t dark:border-slate-700">
             <button type="submit" class="btn-primary">Simpan</button>
         </x-action-buttons>
     </form>

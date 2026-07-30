@@ -4,9 +4,9 @@
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
 @endsection
 @section('breadcrumbs')
-    <span class="text-slate-800 font-medium">Employee Management</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">Affiliation Master</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Employee Management</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Affiliation Master</span>
 @endsection
 @section('content')
 <div class="flex items-center justify-between mb-4">
@@ -30,7 +30,7 @@
         </td>
     </tr>
     @empty
-    <tr><td colspan="5" class="text-center text-slate-400 py-6">Tidak ada afiliasi.</td></tr>
+    <tr><td colspan="5" class="text-center text-slate-400 dark:text-slate-500 py-6">Tidak ada afiliasi.</td></tr>
     @endforelse
 </x-data-table>
 

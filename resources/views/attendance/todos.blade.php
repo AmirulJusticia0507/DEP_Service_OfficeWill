@@ -4,20 +4,20 @@
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
 @endsection
 @section('breadcrumbs')
-    <span class="text-slate-800 font-medium">Attendance</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">{{ $enrollment->course->course_name }}</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">ToDo</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Attendance</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">{{ $enrollment->course->course_name }}</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">ToDo</span>
 @endsection
 @section('content')
 <h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Post-Course ToDo</h2>
 
 <x-form-section-header>Course Information</x-form-section-header>
-<div class="bg-white shadow rounded mb-6 p-4 grid grid-cols-2 gap-4 text-sm">
-    <div><span class="text-slate-500">Course:</span> <span class="font-medium">{{ $enrollment->course->course_name }}</span></div>
-    <div><span class="text-slate-500">Deadline:</span> <span class="font-medium">{{ $enrollment->enrollment_deadline }}</span></div>
-    <div><span class="text-slate-500">Status:</span>
+<div class="bg-white dark:bg-navy-800 shadow rounded mb-6 p-4 grid grid-cols-2 gap-4 text-sm">
+    <div><span class="text-slate-500 dark:text-slate-300">Course:</span> <span class="font-medium">{{ $enrollment->course->course_name }}</span></div>
+    <div><span class="text-slate-500 dark:text-slate-300">Deadline:</span> <span class="font-medium">{{ $enrollment->enrollment_deadline }}</span></div>
+    <div><span class="text-slate-500 dark:text-slate-300">Status:</span>
         @if($enrollment->status === 'ENROLLED')
             <x-status-badge status="ENROLLED">回答中</x-status-badge>
         @elseif($enrollment->status === 'COMPLETED')
@@ -30,8 +30,8 @@
     @forelse ($enrollment->course->todos as $todo)
     @php $response = $enrollment->todoResponses->where('course_todo_id', $todo->id)->first(); @endphp
 
-    <div class="bg-white shadow rounded">
-        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+    <div class="bg-white dark:bg-navy-800 shadow rounded">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-b dark:border-slate-700">
             <div class="flex items-center gap-2">
                 <span class="status-badge
                     @if($todo->todo_type === 'QUESTIONNAIRE') status-badge-pending
@@ -48,12 +48,12 @@
 
         <div class="p-4">
             @if($todo->description)
-                <p class="text-xs text-slate-500 mb-3">{{ $todo->description }}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-300 mb-3">{{ $todo->description }}</p>
             @endif
 
             @if($todo->todo_type === 'QUESTIONNAIRE')
                 @if($response)
-                    <div class="bg-slate-50 rounded p-3 text-sm">{{ $response->response_content }}</div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 rounded p-3 text-sm">{{ $response->response_content }}</div>
                 @else
                     <form method="POST" action="{{ route('todos.questionnaire', $todo) }}">
                         @csrf
@@ -64,7 +64,7 @@
 
             @elseif($todo->todo_type === 'TEST')
                 @if($response)
-                    <div class="bg-slate-50 rounded p-3 text-sm">
+                    <div class="bg-slate-50 dark:bg-navy-900/50 rounded p-3 text-sm">
                         <span class="font-medium">Score:</span> {{ $response->score }}
                         @if($response->status === 'PASSED')
                             <span class="status-badge status-badge-completed ml-2">Lulus</span>
@@ -76,7 +76,7 @@
                     <form method="POST" action="{{ route('todos.test', $todo) }}" class="flex gap-2 items-end">
                         @csrf
                         <div>
-                            <label class="text-xs text-slate-500 block mb-0.5">Score (0-100)</label>
+                            <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Score (0-100)</label>
                             <input type="number" name="score" min="0" max="100" required class="form-input w-24">
                         </div>
                         <button type="submit" class="btn-primary">Grade tests</button>
@@ -85,7 +85,7 @@
 
             @elseif($todo->todo_type === 'REPORT')
                 @if($response)
-                    <div class="bg-slate-50 rounded p-3 text-sm">
+                    <div class="bg-slate-50 dark:bg-navy-900/50 rounded p-3 text-sm">
                         <span class="text-green-600">✓ Laporan sudah dikirim</span>
                         @if($response->response_content)
                             <a href="{{ asset('storage/' . $response->response_content) }}" target="_blank" class="text-[#1e3a8a] hover:underline ml-2 text-xs">Lihat file</a>
@@ -97,7 +97,7 @@
                         <textarea name="response_content" rows="4" placeholder="Tulis laporan Anda di sini..." class="form-input mb-2"></textarea>
                         <div class="flex gap-2 items-end">
                             <div>
-                                <label class="text-xs text-slate-500 block mb-0.5">Atau upload file</label>
+                                <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Atau upload file</label>
                                 <input type="file" name="report_file" class="text-xs">
                             </div>
                             <button type="submit" name="action" value="save" class="btn-secondary">Temporarily save</button>
@@ -109,7 +109,7 @@
         </div>
     </div>
     @empty
-    <div class="bg-white shadow rounded p-6 text-center text-slate-400">Tidak ada todo.</div>
+    <div class="bg-white dark:bg-navy-800 shadow rounded p-6 text-center text-slate-400 dark:text-slate-500">Tidak ada todo.</div>
     @endforelse
 </div>
 

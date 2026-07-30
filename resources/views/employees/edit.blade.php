@@ -4,22 +4,22 @@
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
 @endsection
 @section('breadcrumbs')
-    <span class="text-slate-800 font-medium">Employee Management</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">Employee List</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">Employee Info</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Employee Management</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Employee List</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Employee Info</span>
 @endsection
 @section('quick-menu')
-    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 hover:bg-slate-100 font-medium">基本情報</a>
-    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 hover:bg-slate-100">アカウント情報</a>
-    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 hover:bg-slate-100">所属情報</a>
-    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 hover:bg-slate-100">登録</a>
+    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-navy-700 font-medium">基本情報</a>
+    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-navy-700">アカウント情報</a>
+    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-navy-700">所属情報</a>
+    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-navy-700">登録</a>
 @endsection
 @section('content')
 <h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Edit Karyawan: {{ $employee->full_name }}</h2>
 
-<form method="POST" class="bg-white shadow rounded max-w-3xl">
+<form method="POST" class="bg-white dark:bg-navy-800 shadow rounded max-w-3xl">
     @csrf
     @method('PUT')
 
@@ -73,12 +73,12 @@
 
     <x-form-section-header>Permissions</x-form-section-header>
     <div class="p-4 space-y-2">
-        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_register_employee" value="1" @checked($employee->can_register_employee) class="rounded border-slate-300"> Daftarkan Karyawan</label>
-        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_register_course" value="1" @checked($employee->can_register_course) class="rounded border-slate-300"> Daftarkan Kursus</label>
-        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_setting_attendance" value="1" @checked($employee->can_setting_attendance) class="rounded border-slate-300"> Atur Absensi</label>
+        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_register_employee" value="1" @checked($employee->can_register_employee) class="rounded border-slate-300 dark:border-slate-600 dark:bg-navy-800"> Daftarkan Karyawan</label>
+        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_register_course" value="1" @checked($employee->can_register_course) class="rounded border-slate-300 dark:border-slate-600 dark:bg-navy-800"> Daftarkan Kursus</label>
+        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_setting_attendance" value="1" @checked($employee->can_setting_attendance) class="rounded border-slate-300 dark:border-slate-600 dark:bg-navy-800"> Atur Absensi</label>
     </div>
 
-    <x-action-buttons align="left" class="p-4 border-t border-slate-200">
+    <x-action-buttons align="left" class="p-4 border-t border-slate-200 dark:border-t dark:border-slate-700">
         <button type="submit" class="btn-primary">Simpan</button>
         <a href="{{ route('employees.index') }}" class="btn-secondary">Kembali</a>
     </x-action-buttons>

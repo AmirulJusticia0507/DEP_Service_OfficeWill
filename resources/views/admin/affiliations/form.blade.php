@@ -4,16 +4,16 @@
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
 @endsection
 @section('breadcrumbs')
-    <span class="text-slate-800 font-medium">Employee Management</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">Affiliation Master</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">{{ isset($affiliation) ? 'Edit' : 'Add New' }}</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Employee Management</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Affiliation Master</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">{{ isset($affiliation) ? 'Edit' : 'Add New' }}</span>
 @endsection
 @section('content')
 <h2 class="text-lg font-bold text-[#1e3a8a] mb-4">{{ isset($affiliation) ? 'Edit Affiliation' : 'Add New Affiliation' }}</h2>
 
-<form method="POST" class="bg-white shadow rounded max-w-2xl">
+<form method="POST" class="bg-white dark:bg-navy-800 shadow rounded max-w-2xl">
     @csrf
     @if(isset($affiliation)) @method('PUT') @endif
 
@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <x-action-buttons align="left" class="p-4 border-t border-slate-200">
+    <x-action-buttons align="left" class="p-4 border-t border-slate-200 dark:border-t dark:border-slate-700">
         <button type="submit" class="btn-primary">{{ isset($affiliation) ? 'Update' : 'Save' }}</button>
         <a href="{{ route('admin.affiliations.index') }}" class="btn-secondary">Cancel</a>
     </x-action-buttons>

@@ -4,18 +4,18 @@
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
 @endsection
 @section('breadcrumbs')
-    <span class="text-slate-800 font-medium">Administration</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">ToDo Answer Inquiry</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Administration</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">ToDo Answer Inquiry</span>
 @endsection
 @section('content')
 <h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Post-Learning ToDo Answer Inquiry</h2>
 
-<div class="bg-white rounded shadow mb-4">
-    <div class="p-3 border-b border-slate-200">
+<div class="bg-white dark:bg-navy-800 rounded shadow mb-4">
+    <div class="p-3 border-b border-slate-200 dark:border-b dark:border-slate-700">
         <form class="flex flex-wrap gap-2 items-end">
             <div>
-                <label class="text-xs text-slate-500 block mb-0.5">Pilih Kursus</label>
+                <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Pilih Kursus</label>
                 <select name="course_id" class="form-select w-64" onchange="this.form.submit()">
                     <option value="">— Pilih kursus —</option>
                     @foreach ($courses as $c)
@@ -25,7 +25,7 @@
             </div>
             @if($todos->isNotEmpty())
             <div>
-                <label class="text-xs text-slate-500 block mb-0.5">Pilih ToDo</label>
+                <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Pilih ToDo</label>
                 <select name="todo_id" class="form-select w-64" onchange="this.form.submit()">
                     <option value="">— Pilih todo —</option>
                     @foreach ($todos as $t)
@@ -59,7 +59,7 @@
             </td>
         </tr>
         @empty
-        <tr><td colspan="4" class="text-center text-slate-400 py-6">Belum ada jawaban.</td></tr>
+        <tr><td colspan="4" class="text-center text-slate-400 dark:text-slate-500 py-6">Belum ada jawaban.</td></tr>
         @endforelse
     </x-data-table>
 @endif

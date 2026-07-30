@@ -4,9 +4,9 @@
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
 @endsection
 @section('breadcrumbs')
-    <span class="text-slate-800 font-medium">Employee Management</span>
-    <span class="text-slate-400 mx-1">/</span>
-    <span class="text-slate-800 font-medium">Employee List</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Employee Management</span>
+    <span class="text-slate-400 dark:text-slate-500 mx-1">/</span>
+    <span class="text-slate-800 dark:text-slate-100 font-medium">Employee List</span>
 @endsection
 @section('content')
 <div class="flex items-center justify-between mb-4">
@@ -14,15 +14,15 @@
     <a href="{{ route('employees.create') }}" class="btn-primary">+ Tambah</a>
 </div>
 
-<div class="bg-white rounded shadow mb-4">
-    <div class="p-3 border-b border-slate-200">
+<div class="bg-white dark:bg-navy-800 rounded shadow mb-4">
+    <div class="p-3 border-b border-slate-200 dark:border-b dark:border-slate-700">
         <form class="flex flex-wrap gap-2 items-end">
             <div>
-                <label class="text-xs text-slate-500 block mb-0.5">Nama (Partial Match)</label>
+                <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Nama (Partial Match)</label>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama..." class="form-input w-48">
             </div>
             <div>
-                <label class="text-xs text-slate-500 block mb-0.5">Kode Karyawan (Perfect Match)</label>
+                <label class="text-xs text-slate-500 dark:text-slate-300 block mb-0.5">Kode Karyawan (Perfect Match)</label>
                 <input type="text" name="employee_code" value="{{ request('employee_code') }}" placeholder="NIK..." class="form-input w-36">
             </div>
             <button class="btn-primary">Cari</button>
@@ -48,7 +48,7 @@
         <td><a href="{{ route('employees.edit', $emp) }}" class="text-[#1e3a8a] hover:underline text-xs font-medium">Edit</a></td>
     </tr>
     @empty
-    <tr><td colspan="5" class="text-center text-slate-400 py-6">Tidak ada data karyawan.</td></tr>
+    <tr><td colspan="5" class="text-center text-slate-400 dark:text-slate-500 py-6">Tidak ada data karyawan.</td></tr>
     @endforelse
 </x-data-table>
 
