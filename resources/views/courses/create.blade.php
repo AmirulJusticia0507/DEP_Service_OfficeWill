@@ -8,7 +8,7 @@
 @section('content')
 <h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Tambah Kursus</h2>
 
-<form method="POST" class="bg-white shadow rounded max-w-2xl">
+<form method="POST" enctype="multipart/form-data" class="bg-white shadow rounded max-w-2xl">
     @csrf
 
     <x-form-section-header>Course Information</x-form-section-header>
@@ -32,6 +32,11 @@
         <div>
             <label class="block text-sm mb-1">Deskripsi</label>
             <textarea name="description" rows="3" class="form-input"></textarea>
+        </div>
+        <div>
+            <label class="block text-sm mb-1">Foto Kursus</label>
+            <input type="file" name="photo" accept="image/jpeg,image/png,image/gif,image/webp" class="form-input">
+            <p class="text-xs text-slate-400 mt-0.5">Format: JPEG, PNG, GIF, WebP. Maks 2MB.</p>
         </div>
         <div class="flex gap-6 items-end">
             <div>

@@ -10,7 +10,7 @@
 @section('content')
 <h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Edit Kursus: {{ $course->course_name }}</h2>
 
-<form method="POST" class="bg-white shadow rounded max-w-2xl mb-8">
+<form method="POST" enctype="multipart/form-data" class="bg-white shadow rounded max-w-2xl mb-8">
     @csrf
     @method('PUT')
 
@@ -35,6 +35,16 @@
         <div>
             <label class="block text-sm mb-1">Deskripsi</label>
             <textarea name="description" rows="3" class="form-input">{{ $course->description }}</textarea>
+        </div>
+        <div>
+            <label class="block text-sm mb-1">Foto Kursus</label>
+            @if ($course->photo)
+                <div class="mb-2">
+                    <img src="{{ Storage::url($course->photo) }}" alt="{{ $course->course_name }}" class="w-40 h-28 object-cover rounded border border-slate-200">
+                </div>
+            @endif
+            <input type="file" name="photo" accept="image/jpeg,image/png,image/gif,image/webp" class="form-input">
+            <p class="text-xs text-slate-400 mt-0.5">Format: JPEG, PNG, GIF, WebP. Maks 2MB. Kosongkan jika tidak ingin mengubah.</p>
         </div>
         <div class="flex gap-6 items-end">
             <div>

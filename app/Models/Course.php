@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Course extends Model
 {
@@ -10,9 +12,15 @@ class Course extends Model
         'category_detail_id',
         'course_name',
         'description',
+        'photo',
         'has_retest',
         'passing_score',
     ];
+
+    protected function photoUrl(): Attribute
+    {
+        return Attribute::get(fn () => $this->photo ? Storage::url($this->photo) : null);
+    }
 
     public function categoryDetail()
     {

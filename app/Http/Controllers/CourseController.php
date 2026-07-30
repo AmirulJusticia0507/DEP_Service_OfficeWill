@@ -8,6 +8,7 @@ use App\Models\CourseMaterial;
 use App\Models\CourseTodo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
@@ -37,11 +38,16 @@ class CourseController extends Controller
             'category_detail_id' => 'required|exists:course_category_details,id',
             'course_name' => 'required|max:200',
             'description' => 'nullable',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'has_retest' => 'boolean',
             'passing_score' => 'required|integer|min:0|max:100',
         ]);
 
         $data['has_retest'] = $request->boolean('has_retest');
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('courses', 'public');
+        }
 
         $course = Course::create($data);
 
@@ -62,11 +68,20 @@ class CourseController extends Controller
             'category_detail_id' => 'required|exists:course_category_details,id',
             'course_name' => 'required|max:200',
             'description' => 'nullable',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'has_retest' => 'boolean',
             'passing_score' => 'required|integer|min:0|max:100',
         ]);
 
         $data['has_retest'] = $request->boolean('has_retest');
+
+        if ($request->hasFile('photo')) {
+            if ($course->photo) {
+                Storage::disk('public')->delete($course->photo);
+            }
+            $data['photo'] = $request->file('photo')->store('courses', 'public');
+        }
+
         $course->update($data);
 
         return back()->with('success', 'Kursus berhasil diperbarui.');
