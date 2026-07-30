@@ -1,37 +1,44 @@
 @extends('layouts.app')
 @section('title', 'Penugasan')
+@section('breadcrumbs')
+    <span class="text-slate-800 font-medium">Administration</span>
+    <span class="text-slate-400 mx-1">/</span>
+    <span class="text-slate-800 font-medium">Assignment History</span>
+@endsection
 @section('content')
 <div class="flex items-center justify-between mb-4">
-    <h2 class="text-xl font-bold">Riwayat Penugasan</h2>
-    <a href="{{ route('admin.assignments.create') }}" class="bg-indigo-600 text-white rounded px-4 py-2 text-sm">Tugaskan Kursus</a>
+    <h2 class="text-lg font-bold text-[#1e3a8a]">Riwayat Penugasan</h2>
+    <a href="{{ route('admin.assignments.create') }}" class="btn-primary">+ Tugaskan Kursus</a>
 </div>
-<table class="w-full text-sm bg-white shadow rounded">
-    <thead class="bg-slate-100">
-        <tr><th class="p-2">Kursus</th><th class="p-2">Karyawan</th><th class="p-2">Deadline</th><th class="p-2">Status</th><th class="p-2"></th></tr>
-    </thead>
-    <tbody>
-        @foreach ($assignments as $a)
-        <tr class="border-t">
-            <td class="p-2">{{ $a->course->course_name }}</td>
-            <td class="p-2">{{ $a->employee->full_name }}</td>
-            <td class="p-2">{{ $a->enrollment_deadline }}</td>
-            <td class="p-2">
-                <span class="px-2 py-0.5 rounded text-xs font-medium
-                    @if($a->status === 'ENROLLED') bg-sky-100 text-sky-800
-                    @elseif($a->status === 'COMPLETED') bg-emerald-100 text-emerald-800
-                    @else bg-rose-100 text-rose-800 @endif">{{ $a->status }}</span>
-            </td>
-            <td class="p-2">
-                @if($a->status === 'ENROLLED')
-                <form method="POST" action="{{ route('admin.assignments.cancel', $a) }}" class="inline">
-                    @csrf
-                    <button class="text-rose-600 hover:underline text-xs">Batalkan</button>
-                </form>
-                @endif
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+
+<x-data-table :headers="['Kursus', 'Karyawan', 'Deadline', 'Status', '']">
+    @forelse ($assignments as $a)
+    <tr>
+        <td>{{ $a->course->course_name }}</td>
+        <td>{{ $a->employee->full_name }}</td>
+        <td>{{ $a->enrollment_deadline }}</td>
+        <td>
+            @if($a->status === 'ENROLLED')
+                <x-status-badge status="ENROLLED">ENROLLED</x-status-badge>
+            @elseif($a->status === 'COMPLETED')
+                <x-status-badge status="COMPLETED">COMPLETED</x-status-badge>
+            @else
+                <x-status-badge status="CANCELLED">CANCELLED</x-status-badge>
+            @endif
+        </td>
+        <td>
+            @if($a->status === 'ENROLLED')
+            <form method="POST" action="{{ route('admin.assignments.cancel', $a) }}" class="inline">
+                @csrf
+                <button class="text-[#dc2626] hover:underline text-xs">Batalkan</button>
+            </form>
+            @endif
+        </td>
+    </tr>
+    @empty
+    <tr><td colspan="5" class="text-center text-slate-400 py-6">Tidak ada penugasan.</td></tr>
+    @endforelse
+</x-data-table>
+
 <div class="mt-4">{{ $assignments->links() }}</div>
 @endsection

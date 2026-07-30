@@ -6,11 +6,134 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-    --color-primary: #1e293b;
-    --color-primary-dark: #0f172a;
-    --color-accent: #0284c7;
-    --color-accent-dark: #0369a1;
-    --color-success: #10b981;
-    --color-warning: #f59e0b;
-    --color-danger: #e11d48;
+
+    --color-navy-900: #0f172a;
+    --color-navy-800: #1e293b;
+    --color-navy-700: #1e3a8a;
+    --color-blue-soft: #bfdbfe;
+    --color-blue-accent: #0284c7;
+    --color-red-mark: #dc2626;
+    --color-slate-border: #cbd5e1;
+    --color-slate-hover: #f8fafc;
+    --color-table-stripe: #ffffff;
+}
+
+.form-section-header {
+    background-color: #bfdbfe;
+    color: #1e3a8a;
+    padding: 6px 12px;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 4px 4px 0 0;
+}
+
+.required-mark {
+    color: #dc2626;
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    background-color: #1e3a8a;
+    color: white;
+    padding: 8px;
+    font-size: 13px;
+    text-align: left;
+}
+
+.data-table td {
+    border: 1px solid #e2e8f0;
+    padding: 6px 8px;
+    font-size: 12px;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.data-table tr:hover {
+    background-color: #f1f5f9;
+}
+
+.form-input {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #0284c7;
+    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+}
+
+.form-select {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 13px;
+    background-color: white;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #0284c7;
+    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+}
+
+.btn-primary {
+    background-color: #1e3a8a;
+    color: white;
+    border-radius: 4px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: #1e40af;
+}
+
+.btn-secondary {
+    background-color: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 6px 16px;
+    font-size: 13px;
+}
+
+.btn-secondary:hover {
+    background-color: #e2e8f0;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-badge-completed {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-badge-in-progress {
+    background-color: #fef9c3;
+    color: #854d0e;
+}
+
+.status-badge-pending {
+    background-color: #fce7f3;
+    color: #9d174d;
 }

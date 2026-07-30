@@ -1,38 +1,53 @@
 @extends('layouts.app')
-@section('title', 'Karyawan')
+@section('title', 'Data Karyawan')
+@section('breadcrumbs')
+    <span class="text-slate-800 font-medium">Employee Management</span>
+    <span class="text-slate-400 mx-1">/</span>
+    <span class="text-slate-800 font-medium">Employee List</span>
+@endsection
 @section('content')
 <div class="flex items-center justify-between mb-4">
-    <h2 class="text-xl font-bold">Data Karyawan</h2>
-    <a href="{{ route('employees.create') }}" class="bg-indigo-600 text-white rounded px-4 py-2 text-sm">Tambah</a>
+    <h2 class="text-lg font-bold text-[#1e3a8a]">Data Karyawan</h2>
+    <a href="{{ route('employees.create') }}" class="btn-primary">+ Tambah</a>
 </div>
 
-<form class="mb-4 flex gap-2">
-    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama/email/NIK" class="border rounded px-3 py-1.5 text-sm flex-1">
-    <button class="bg-slate-200 rounded px-3 py-1.5 text-sm">Cari</button>
-</form>
+<div class="bg-white rounded shadow mb-4">
+    <div class="p-3 border-b border-slate-200">
+        <form class="flex flex-wrap gap-2 items-end">
+            <div>
+                <label class="text-xs text-slate-500 block mb-0.5">Nama (Partial Match)</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama..." class="form-input w-48">
+            </div>
+            <div>
+                <label class="text-xs text-slate-500 block mb-0.5">Kode Karyawan (Perfect Match)</label>
+                <input type="text" name="employee_code" value="{{ request('employee_code') }}" placeholder="NIK..." class="form-input w-36">
+            </div>
+            <button class="btn-primary">Cari</button>
+        </form>
+    </div>
+</div>
 
-<table class="w-full text-sm bg-white shadow rounded">
-    <thead class="bg-slate-100">
-        <tr><th class="p-2 text-left">NIK</th><th class="p-2 text-left">Nama</th><th class="p-2 text-left">Email</th><th class="p-2 text-left">Status</th><th class="p-2"></th></tr>
-    </thead>
-    <tbody>
-        @foreach ($employees as $emp)
-        <tr class="border-t">
-            <td class="p-2">{{ $emp->employee_code }}</td>
-            <td class="p-2">{{ $emp->full_name }}</td>
-            <td class="p-2">{{ $emp->email }}</td>
-            <td class="p-2">
-                <span class="px-2 py-0.5 rounded text-xs font-medium
-                    @if($emp->account_status === 'ACTIVE') bg-emerald-100 text-emerald-800
-                    @elseif($emp->account_status === 'LOCKED') bg-amber-100 text-amber-800
-                    @else bg-rose-100 text-rose-800 @endif">
-                    {{ $emp->account_status }}
-                </span>
-            </td>
-            <td class="p-2"><a href="{{ route('employees.edit', $emp) }}" class="text-indigo-600 hover:underline">Edit</a></td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+<x-data-table :headers="['NIK', 'Nama', 'Email', 'Status', '']">
+    @forelse ($employees as $emp)
+    <tr>
+        <td>{{ $emp->employee_code }}</td>
+        <td class="font-medium">{{ $emp->full_name }}</td>
+        <td>{{ $emp->email }}</td>
+        <td>
+            @if($emp->account_status === 'ACTIVE')
+                <x-status-badge status="COMPLETED">Aktif</x-status-badge>
+            @elseif($emp->account_status === 'LOCKED')
+                <x-status-badge status="ENROLLED">Terkunci</x-status-badge>
+            @else
+                <x-status-badge status="CANCELLED">Nonaktif</x-status-badge>
+            @endif
+        </td>
+        <td><a href="{{ route('employees.edit', $emp) }}" class="text-[#1e3a8a] hover:underline text-xs font-medium">Edit</a></td>
+    </tr>
+    @empty
+    <tr><td colspan="5" class="text-center text-slate-400 py-6">Tidak ada data karyawan.</td></tr>
+    @endforelse
+</x-data-table>
+
 <div class="mt-4">{{ $employees->links() }}</div>
 @endsection

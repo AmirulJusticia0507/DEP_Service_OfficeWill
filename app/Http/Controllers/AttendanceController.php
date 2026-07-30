@@ -15,7 +15,7 @@ class AttendanceController extends Controller
     {
         $employee = Auth::guard('employee')->user();
 
-        $enrollments = CourseEnrollment::with('course.materials')
+        $enrollments = CourseEnrollment::with('course.materials', 'course.todos', 'course.categoryDetail', 'todoResponses')
             ->where('employee_id', $employee->id)
             ->where('status', 'ENROLLED')
             ->where('enrollment_deadline', '>=', Carbon::today())
@@ -35,6 +35,32 @@ class AttendanceController extends Controller
         $course->load('materials', 'todos');
 
         return view('attendance.show', compact('course', 'enrollment'));
+    }
+
+    public function todos(CourseEnrollment $enrollment)
+    {
+        $employee = Auth::guard('employee')->user();
+
+        if ($enrollment->employee_id !== $employee->id) {
+            abort(403);
+        }
+
+        $enrollment->load('course.materials', 'course.todos', 'todoResponses');
+
+        return view('attendance.todos', compact('enrollment'));
+    }
+
+    public function score(CourseEnrollment $enrollment)
+    {
+        $employee = Auth::guard('employee')->user();
+
+        if ($enrollment->employee_id !== $employee->id) {
+            abort(403);
+        }
+
+        $enrollment->load('course.todos', 'todoResponses.courseTodo');
+
+        return view('attendance.score', compact('enrollment'));
     }
 
     public function complete(CourseEnrollment $enrollment): RedirectResponse

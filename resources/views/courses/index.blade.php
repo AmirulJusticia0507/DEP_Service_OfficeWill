@@ -1,25 +1,29 @@
 @extends('layouts.app')
-@section('title', 'Kursus')
+@section('title', 'Daftar Kursus')
+@section('breadcrumbs')
+    <span class="text-slate-800 font-medium">In-house Training</span>
+    <span class="text-slate-400 mx-1">/</span>
+    <span class="text-slate-800 font-medium">Course List</span>
+@endsection
 @section('content')
 <div class="flex items-center justify-between mb-4">
-    <h2 class="text-xl font-bold">Daftar Kursus</h2>
-    <a href="{{ route('courses.create') }}" class="bg-indigo-600 text-white rounded px-4 py-2 text-sm">Tambah</a>
+    <h2 class="text-lg font-bold text-[#1e3a8a]">Daftar Kursus</h2>
+    <a href="{{ route('courses.create') }}" class="btn-primary">+ Tambah</a>
 </div>
-<table class="w-full text-sm bg-white shadow rounded">
-    <thead class="bg-slate-100">
-        <tr><th class="p-2 text-left">Nama</th><th class="p-2 text-left">Kategori</th><th class="p-2 text-left">Passing Score</th><th class="p-2">Retest</th><th class="p-2"></th></tr>
-    </thead>
-    <tbody>
-        @foreach ($courses as $course)
-        <tr class="border-t">
-            <td class="p-2">{{ $course->course_name }}</td>
-            <td class="p-2">{{ $course->categoryDetail->detail_name ?? '-' }}</td>
-            <td class="p-2">{{ $course->passing_score }}</td>
-            <td class="p-2 text-center">{{ $course->has_retest ? 'Ya' : '-' }}</td>
-            <td class="p-2"><a href="{{ route('courses.edit', $course) }}" class="text-indigo-600 hover:underline">Edit</a></td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+
+<x-data-table :headers="['Nama Kursus', 'Kategori', 'Passing Score', 'Retest', '']">
+    @forelse ($courses as $course)
+    <tr>
+        <td class="font-medium">{{ $course->course_name }}</td>
+        <td>{{ $course->categoryDetail->detail_name ?? '-' }}</td>
+        <td>{{ $course->passing_score }}</td>
+        <td class="text-center">{{ $course->has_retest ? 'Ya' : '-' }}</td>
+        <td><a href="{{ route('courses.edit', $course) }}" class="text-[#1e3a8a] hover:underline text-xs font-medium">Edit</a></td>
+    </tr>
+    @empty
+    <tr><td colspan="5" class="text-center text-slate-400 py-6">Tidak ada kursus.</td></tr>
+    @endforelse
+</x-data-table>
+
 <div class="mt-4">{{ $courses->links() }}</div>
 @endsection

@@ -1,71 +1,46 @@
 @extends('layouts.app')
 @section('title', $course->course_name)
+@section('breadcrumbs')
+    <span class="text-slate-800 font-medium">Attendance</span>
+    <span class="text-slate-400 mx-1">/</span>
+    <span class="text-slate-800 font-medium">{{ $course->course_name }}</span>
+@endsection
 @section('content')
-<h2 class="text-xl font-bold mb-4">{{ $course->course_name }}</h2>
+<h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Course Attendance</h2>
 
-<h3 class="font-semibold mb-2">Materi</h3>
-@foreach ($course->materials as $mat)
-    <div class="bg-white shadow rounded p-3 mb-2 flex items-center gap-3">
-        <span class="px-2 py-0.5 rounded text-xs font-medium {{ $mat->material_type === 'YOUTUBE' ? 'bg-rose-100 text-rose-700' : 'bg-sky-100 text-sky-700' }}">{{ $mat->material_type }}</span>
-        <span class="text-sm">{{ $mat->title }}</span>
-        @if($mat->material_type === 'YOUTUBE')
-            <a href="{{ $mat->content_url_or_path }}" target="_blank" class="text-indigo-600 hover:underline text-xs ml-auto">Tonton</a>
-        @else
-            <a href="{{ $mat->content_url_or_path }}" target="_blank" class="text-indigo-600 hover:underline text-xs ml-auto">Buka PDF</a>
+<x-form-section-header>Course Information</x-form-section-header>
+<div class="bg-white shadow rounded mb-6 p-4 grid grid-cols-2 gap-4 text-sm">
+    <div><span class="text-slate-500">Course Name:</span> <span class="font-medium">{{ $course->course_name }}</span></div>
+    <div><span class="text-slate-500">Classification:</span> <span class="font-medium">{{ $course->categoryDetail->detail_name ?? '-' }}</span></div>
+    <div><span class="text-slate-500">Enrollment Deadline:</span> <span class="font-medium">{{ $enrollment->enrollment_deadline }}</span></div>
+    <div><span class="text-slate-500">Status:</span>
+        @if($enrollment->status === 'ENROLLED')
+            <x-status-badge status="ENROLLED">回答中</x-status-badge>
+        @elseif($enrollment->status === 'COMPLETED')
+            <x-status-badge status="COMPLETED">修了</x-status-badge>
         @endif
     </div>
-@endforeach
+</div>
 
-<h3 class="font-semibold mt-6 mb-2">Todo</h3>
-@foreach ($course->todos as $todo)
-    <div class="bg-white shadow rounded p-4 mb-3">
-        <div class="flex items-center justify-between mb-2">
-            <span class="px-2 py-0.5 rounded text-xs font-medium
-                @if($todo->todo_type === 'QUESTIONNAIRE') bg-purple-100 text-purple-700
-                @elseif($todo->todo_type === 'REPORT') bg-amber-100 text-amber-700
-                @else bg-teal-100 text-teal-700 @endif">{{ $todo->todo_type }}</span>
-            <strong class="text-sm">{{ $todo->title }}</strong>
-        </div>
-        @if($todo->description)
-            <p class="text-xs text-slate-500 mb-2">{{ $todo->description }}</p>
-        @endif
-
-        @php
-            $response = $enrollment->todoResponses->where('course_todo_id', $todo->id)->first();
-        @endphp
-
-        @if($response && $response->status === 'PASSED')
-            <span class="text-emerald-600 text-xs font-medium">✓ Selesai</span>
-        @elseif($response && $response->status === 'FAILED')
-            <span class="text-rose-600 text-xs font-medium">✗ Tidak lulus ({{ $response->score }})</span>
-        @endif
-
-        @if($todo->todo_type === 'QUESTIONNAIRE')
-            <form method="POST" action="{{ route('todos.questionnaire', $todo) }}" class="mt-2">
-                @csrf
-                <textarea name="response_content" rows="2" placeholder="Jawaban Anda..." class="w-full border rounded px-2 py-1.5 text-xs"></textarea>
-                <button type="submit" class="bg-purple-600 text-white rounded px-3 py-1 text-xs mt-1">Kirim</button>
-            </form>
-        @elseif($todo->todo_type === 'REPORT')
-            <form method="POST" action="{{ route('todos.report', $todo) }}" enctype="multipart/form-data" class="mt-2">
-                @csrf
-                <input type="file" name="report_file" class="text-xs">
-                <button type="submit" class="bg-amber-600 text-white rounded px-3 py-1 text-xs mt-1">Upload</button>
-            </form>
-        @elseif($todo->todo_type === 'TEST')
-            <form method="POST" action="{{ route('todos.test', $todo) }}" class="mt-2 flex gap-2">
-                @csrf
-                <input type="number" name="score" placeholder="Nilai" max="100" class="w-20 border rounded px-2 py-1 text-xs">
-                <button type="submit" class="bg-teal-600 text-white rounded px-3 py-1 text-xs">Submit</button>
-            </form>
-        @endif
+<x-form-section-header>Materials</x-form-section-header>
+<div class="bg-white shadow rounded mb-6 p-4 space-y-2">
+    @forelse ($course->materials as $mat)
+    <div class="flex items-center gap-3 py-2 px-3 rounded {{ $loop->even ? 'bg-slate-50' : '' }}">
+        <span class="status-badge {{ $mat->material_type === 'YOUTUBE' ? 'status-badge-in-progress' : 'status-badge-completed' }}">{{ $mat->material_type }}</span>
+        <span class="text-sm font-medium">{{ $mat->title }}</span>
+        <a href="{{ $mat->content_url_or_path }}" target="_blank" class="btn-primary text-xs ml-auto">View materials</a>
     </div>
-@endforeach
+    @empty
+    <p class="text-sm text-slate-400">Belum ada materi.</p>
+    @endforelse
+</div>
 
-@if($enrollment->status === 'ENROLLED')
-    <form method="POST" action="{{ route('attendance.complete', $enrollment) }}" class="mt-4">
-        @csrf
-        <button type="submit" class="bg-emerald-600 text-white rounded px-6 py-2 text-sm font-medium">Selesaikan Kursus</button>
-    </form>
-@endif
+<div class="flex justify-end gap-2">
+    @if($enrollment->status === 'ENROLLED')
+    <a href="{{ route('attendance.todos', $enrollment) }}" class="btn-primary">Go to ToDo</a>
+    @endif
+    @if($enrollment->status === 'COMPLETED')
+    <a href="{{ route('attendance.score', $enrollment) }}" class="btn-primary">View Score</a>
+    @endif
+</div>
 @endsection

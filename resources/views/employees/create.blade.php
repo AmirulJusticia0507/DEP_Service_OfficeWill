@@ -1,46 +1,72 @@
 @extends('layouts.app')
 @section('title', 'Tambah Karyawan')
+@section('breadcrumbs')
+    <span class="text-slate-800 font-medium">Employee Management</span>
+    <span class="text-slate-400 mx-1">/</span>
+    <span class="text-slate-800 font-medium">Employee Registration</span>
+@endsection
+@section('quick-menu')
+    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 hover:bg-slate-100 font-medium">基本情報</a>
+    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 hover:bg-slate-100">アカウント情報</a>
+    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 hover:bg-slate-100">所属情報</a>
+    <a href="#" class="block px-3 py-2 rounded text-sm text-slate-600 hover:bg-slate-100">登録</a>
+@endsection
 @section('content')
-<h2 class="text-xl font-bold mb-4">Tambah Karyawan</h2>
-<form method="POST" class="max-w-xl bg-white shadow rounded p-6 space-y-3">
+<h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Tambah Karyawan</h2>
+
+<form method="POST" class="bg-white shadow rounded max-w-3xl">
     @csrf
-    <div>
-        <label class="block text-sm mb-1">NIK Karyawan</label>
-        <input type="text" name="employee_code" required class="w-full border rounded px-3 py-2 text-sm">
+
+    <x-form-section-header>Basic Information</x-form-section-header>
+    <div class="p-4 space-y-3">
+        <div>
+            <label class="block text-sm mb-1"><x-required-mark /> NIK Karyawan</label>
+            <input type="text" name="employee_code" required class="form-input">
+        </div>
+        <div>
+            <label class="block text-sm mb-1"><x-required-mark /> Nama Lengkap</label>
+            <input type="text" name="full_name" required class="form-input">
+        </div>
+        <div>
+            <label class="block text-sm mb-1">Kana Name</label>
+            <input type="text" name="kana_name" class="form-input">
+        </div>
+        <div>
+            <label class="block text-sm mb-1"><x-required-mark /> Email</label>
+            <input type="email" name="email" required class="form-input">
+        </div>
+        <div>
+            <label class="block text-sm mb-1">No. Telepon</label>
+            <input type="text" name="phone_number" class="form-input">
+        </div>
     </div>
-    <div>
-        <label class="block text-sm mb-1">Nama Lengkap</label>
-        <input type="text" name="full_name" required class="w-full border rounded px-3 py-2 text-sm">
+
+    <x-form-section-header>Account Information</x-form-section-header>
+    <div class="p-4 space-y-3">
+        <div>
+            <label class="block text-sm mb-1">Cakupan Wewenang</label>
+            <select name="authority_effective_range" class="form-select">
+                <option value="ONLY">Afiliasi sendiri</option>
+                <option value="BELOW">Afiliasi & sub-afiliasi</option>
+                <option value="ALL">Semua afiliasi</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm mb-1">Kode Afiliasi Wewenang</label>
+            <input type="text" name="authority_effective_affiliation_code" class="form-input">
+        </div>
     </div>
-    <div>
-        <label class="block text-sm mb-1">Kana Name</label>
-        <input type="text" name="kana_name" class="w-full border rounded px-3 py-2 text-sm">
+
+    <x-form-section-header>Permissions</x-form-section-header>
+    <div class="p-4 space-y-2">
+        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_register_employee" class="rounded border-slate-300"> Daftarkan Karyawan</label>
+        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_register_course" class="rounded border-slate-300"> Daftarkan Kursus</label>
+        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_setting_attendance" class="rounded border-slate-300"> Atur Absensi</label>
     </div>
-    <div>
-        <label class="block text-sm mb-1">Email</label>
-        <input type="email" name="email" required class="w-full border rounded px-3 py-2 text-sm">
-    </div>
-    <div>
-        <label class="block text-sm mb-1">No. Telepon</label>
-        <input type="text" name="phone_number" class="w-full border rounded px-3 py-2 text-sm">
-    </div>
-    <div>
-        <label class="block text-sm mb-1">Cakupan Wewenang</label>
-        <select name="authority_effective_range" class="w-full border rounded px-3 py-2 text-sm">
-            <option value="ONLY">Afiliasi sendiri</option>
-            <option value="BELOW">Afiliasi & sub-afiliasi</option>
-            <option value="ALL">Semua afiliasi</option>
-        </select>
-    </div>
-    <div>
-        <label class="block text-sm mb-1">Kode Afiliasi Wewenang</label>
-        <input type="text" name="authority_effective_affiliation_code" class="w-full border rounded px-3 py-2 text-sm">
-    </div>
-    <div class="flex gap-4">
-        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_register_employee"> Daftarkan Karyawan</label>
-        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_register_course"> Daftarkan Kursus</label>
-        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_setting_attendance"> Atur Absensi</label>
-    </div>
-    <button type="submit" class="bg-indigo-600 text-white rounded px-4 py-2 text-sm">Simpan</button>
+
+    <x-action-buttons align="left" class="p-4 border-t border-slate-200">
+        <button type="submit" class="btn-primary">Simpan</button>
+        <a href="{{ route('employees.index') }}" class="btn-secondary">Kembali</a>
+    </x-action-buttons>
 </form>
 @endsection

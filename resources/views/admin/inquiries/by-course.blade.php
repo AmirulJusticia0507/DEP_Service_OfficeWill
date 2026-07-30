@@ -1,39 +1,54 @@
 @extends('layouts.app')
 @section('title', 'Inkuiri per Kursus')
+@section('breadcrumbs')
+    <span class="text-slate-800 font-medium">Administration</span>
+    <span class="text-slate-400 mx-1">/</span>
+    <span class="text-slate-800 font-medium">Inquiry by Course</span>
+@endsection
 @section('content')
-<h2 class="text-xl font-bold mb-4">Inkuiri per Kursus</h2>
-<form class="mb-4 flex gap-2">
-    <select name="course_id" class="border rounded px-3 py-2 text-sm">
-        <option value="">Pilih kursus</option>
-        @foreach ($courses as $c)
-            <option value="{{ $c->id }}" @selected(request('course_id') == $c->id)>{{ $c->course_name }}</option>
-        @endforeach
-    </select>
-    <button class="bg-slate-200 rounded px-3 py-2 text-sm">Lihat</button>
-</form>
+<h2 class="text-lg font-bold text-[#1e3a8a] mb-4">Inkuiri per Kursus</h2>
+
+<div class="bg-white rounded shadow mb-4">
+    <div class="p-3 border-b border-slate-200">
+        <form class="flex gap-2 items-end">
+            <div>
+                <label class="text-xs text-slate-500 block mb-0.5">Pilih Kursus</label>
+                <select name="course_id" class="form-select w-64">
+                    <option value="">— Pilih kursus —</option>
+                    @foreach ($courses as $c)
+                        <option value="{{ $c->id }}" @selected(request('course_id') == $c->id)>{{ $c->course_name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <button class="btn-primary">Lihat</button>
+        </form>
+    </div>
+</div>
 
 @if($selectedCourse)
-    <h3 class="font-semibold mb-2">{{ $selectedCourse->course_name }}</h3>
-    <table class="w-full text-sm bg-white shadow rounded">
-        <thead class="bg-slate-100">
-            <tr><th class="p-2">Karyawan</th><th class="p-2">Deadline</th><th class="p-2">Status</th><th class="p-2">Progress Todo</th></tr>
-        </thead>
-        <tbody>
-            @foreach ($enrollments as $enr)
-            <tr class="border-t">
-                <td class="p-2">{{ $enr->employee->full_name }}</td>
-                <td class="p-2">{{ $enr->enrollment_deadline }}</td>
-                <td class="p-2">
-                    <span class="px-2 py-0.5 rounded text-xs font-medium
-                        @if($enr->status === 'ENROLLED') bg-sky-100 text-sky-800
-                        @elseif($enr->status === 'COMPLETED') bg-emerald-100 text-emerald-800
-                        @else bg-rose-100 text-rose-800 @endif">{{ $enr->status }}</span>
-                </td>
-                <td class="p-2">{{ $enr->todoResponses->count() }} todo</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <h3 class="font-semibold text-sm mb-3 text-[#1e3a8a]">{{ $selectedCourse->course_name }}</h3>
+
+    <x-data-table :headers="['Karyawan', 'Deadline', 'Status', 'Progress Todo']">
+        @forelse ($enrollments as $enr)
+        <tr>
+            <td>{{ $enr->employee->full_name }}</td>
+            <td>{{ $enr->enrollment_deadline }}</td>
+            <td>
+                @if($enr->status === 'ENROLLED')
+                    <x-status-badge status="ENROLLED">ENROLLED</x-status-badge>
+                @elseif($enr->status === 'COMPLETED')
+                    <x-status-badge status="COMPLETED">COMPLETED</x-status-badge>
+                @else
+                    <x-status-badge status="CANCELLED">CANCELLED</x-status-badge>
+                @endif
+            </td>
+            <td>{{ $enr->todoResponses->count() }} todo</td>
+        </tr>
+        @empty
+        <tr><td colspan="4" class="text-center text-slate-400 py-6">Tidak ada enrollment.</td></tr>
+        @endforelse
+    </x-data-table>
+
     <div class="mt-4">{{ $enrollments->links() }}</div>
 @endif
 @endsection
