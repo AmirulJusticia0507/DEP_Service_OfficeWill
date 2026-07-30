@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop, amirul_dev2]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  laravel:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: dep_service_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          extensions: mbstring, pdo, pdo_mysql, bcmath, gd, zip
+          tools: composer:v2
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Environment
+        run: cp .env.example .env && php artisan key:generate
+
+      - name: Migrate
+        run: php artisan migrate --force
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: dep_service_test
+          DB_USERNAME: root
+          DB_PASSWORD: ""
+
+      - name: Tests
+        run: php artisan test
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: dep_service_test
+          DB_USERNAME: root
+          DB_PASSWORD: ""
+
+      - name: Code Style (Pint)
+        run: vendor/bin/pint --test

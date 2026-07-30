@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', $course->course_name)
 @section('header-icon')
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <i class="ti ti-calendar-check"></i>
 @endsection
 @section('breadcrumbs')
     <span class="text-slate-800 dark:text-slate-100 font-medium">Attendance</span>
