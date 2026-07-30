@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
-Route::redirect('/', '/login');
+Route::get('/', [\App\Http\Controllers\PublicController::class, 'welcome']);
 
 Route::middleware('guest:employee')->group(function () {
     Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
