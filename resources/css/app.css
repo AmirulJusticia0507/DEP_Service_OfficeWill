@@ -54,9 +54,12 @@
     --color-table-stripe: #ffffff;
 }
 
+#sidebar {
+    color: var(--sidebar-text, #f8fafc);
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
 .bg-sidebar {
     background-color: var(--sidebar-bg);
-    transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 .dark .bg-sidebar {
     background-color: var(--sidebar-dark);
@@ -67,7 +70,11 @@
 .sidebar-hover:hover,
 .sidebar-hover:focus-visible {
     background-color: var(--sidebar-hover);
+    color: #ffffff;
     outline: none;
+}
+.sidebar-link {
+    color: var(--sidebar-text, #f8fafc);
 }
 .sidebar-link:focus,
 .sidebar-link:active {
@@ -78,6 +85,9 @@
 }
 .text-sidebar-accent-dim {
     color: var(--sidebar-accent-dim);
+}
+.dark .text-sidebar-accent-dim {
+    opacity: 0.9;
 }
 .border-sidebar {
     border-color: var(--sidebar-border);
