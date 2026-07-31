@@ -43,7 +43,7 @@ class AuthorityController extends Controller
             'can_register_course' => 'sometimes|boolean',
             'can_setting_attendance' => 'sometimes|boolean',
             'authority_effective_range' => 'required|in:ONLY,BELOW,ALL',
-            'authority_effective_affiliation_code' => 'nullable|string|max:20',
+            'authority_effective_affiliation_code' => 'nullable|string|max:20|exists:affiliations,affiliation_code,company_id,'.$operator->company_id,
         ]);
 
         $data['is_sys_admin'] = $request->boolean('is_sys_admin');

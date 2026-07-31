@@ -29,7 +29,7 @@ class PositionController extends Controller
         $companyId = Auth::guard('employee')->user()->company_id;
 
         $data = $request->validate([
-            'job_id' => 'required|max:20|unique:master_jobs,job_id,NULL,id,company_id,' . $companyId,
+            'job_id' => 'required|max:20|unique:master_jobs,job_id,NULL,id,company_id,'.$companyId,
             'job_title' => 'required|max:100',
             'display_order' => 'nullable|integer|min:0',
         ]);
@@ -43,15 +43,18 @@ class PositionController extends Controller
 
     public function edit(MasterJob $position)
     {
+        abort_if($position->company_id !== Auth::guard('employee')->user()->company_id, 404);
+
         return view('admin.positions.form', compact('position'));
     }
 
     public function update(Request $request, MasterJob $position): RedirectResponse
     {
         $companyId = Auth::guard('employee')->user()->company_id;
+        abort_if($position->company_id !== $companyId, 404);
 
         $data = $request->validate([
-            'job_id' => 'required|max:20|unique:master_jobs,job_id,' . $position->id . ',id,company_id,' . $companyId,
+            'job_id' => 'required|max:20|unique:master_jobs,job_id,'.$position->id.',id,company_id,'.$companyId,
             'job_title' => 'required|max:100',
             'display_order' => 'nullable|integer|min:0',
         ]);
@@ -63,7 +66,10 @@ class PositionController extends Controller
 
     public function destroy(MasterJob $position): RedirectResponse
     {
+        abort_if($position->company_id !== Auth::guard('employee')->user()->company_id, 404);
+
         $position->delete();
+
         return redirect('/admin/positions')->with('success', 'Jabatan berhasil dihapus.');
     }
 }

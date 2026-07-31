@@ -33,9 +33,9 @@ class AffiliationController extends Controller
         $companyId = Auth::guard('employee')->user()->company_id;
 
         $data = $request->validate([
-            'affiliation_code' => 'required|max:20|unique:affiliations,affiliation_code,NULL,id,company_id,' . $companyId,
+            'affiliation_code' => 'required|max:20|unique:affiliations,affiliation_code,NULL,id,company_id,'.$companyId,
             'affiliation_name' => 'required|max:150',
-            'parent_affiliation_code' => 'nullable|max:20|exists:affiliations,affiliation_code',
+            'parent_affiliation_code' => 'nullable|max:20|exists:affiliations,affiliation_code,company_id,'.$companyId,
             'display_order' => 'nullable|integer|min:0',
             'organization_type' => 'nullable|integer|in:1,2',
         ]);
@@ -49,7 +49,10 @@ class AffiliationController extends Controller
 
     public function edit(Affiliation $affiliation)
     {
-        $parentAffiliations = Affiliation::where('company_id', Auth::guard('employee')->user()->company_id)
+        $companyId = Auth::guard('employee')->user()->company_id;
+        abort_if($affiliation->company_id !== $companyId, 404);
+
+        $parentAffiliations = Affiliation::where('company_id', $companyId)
             ->where('id', '!=', $affiliation->id)
             ->orderBy('display_order')
             ->get();
@@ -60,11 +63,12 @@ class AffiliationController extends Controller
     public function update(Request $request, Affiliation $affiliation): RedirectResponse
     {
         $companyId = Auth::guard('employee')->user()->company_id;
+        abort_if($affiliation->company_id !== $companyId, 404);
 
         $data = $request->validate([
-            'affiliation_code' => 'required|max:20|unique:affiliations,affiliation_code,' . $affiliation->id . ',id,company_id,' . $companyId,
+            'affiliation_code' => 'required|max:20|unique:affiliations,affiliation_code,'.$affiliation->id.',id,company_id,'.$companyId,
             'affiliation_name' => 'required|max:150',
-            'parent_affiliation_code' => 'nullable|max:20|exists:affiliations,affiliation_code',
+            'parent_affiliation_code' => 'nullable|max:20|exists:affiliations,affiliation_code,company_id,'.$companyId,
             'display_order' => 'nullable|integer|min:0',
             'organization_type' => 'nullable|integer|in:1,2',
         ]);
@@ -76,7 +80,11 @@ class AffiliationController extends Controller
 
     public function destroy(Affiliation $affiliation): RedirectResponse
     {
+        $companyId = Auth::guard('employee')->user()->company_id;
+        abort_if($affiliation->company_id !== $companyId, 404);
+
         $affiliation->delete();
+
         return redirect('/admin/affiliations')->with('success', 'Afiliasi berhasil dihapus.');
     }
 }

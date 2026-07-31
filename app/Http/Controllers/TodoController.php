@@ -57,6 +57,10 @@ class TodoController extends Controller
             ->where('employee_id', $employee->id)
             ->firstOrFail();
 
+        $request->validate([
+            'report_file' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
+        ]);
+
         $file = $request->file('report_file');
         $path = $file ? $file->store('reports') : null;
 
