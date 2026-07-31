@@ -86,7 +86,7 @@
                 @endif
                 <a href="{{ route('profile.show') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('profile.*') ? 'sidebar-active' : '' }}"><i class="ti ti-user-circle text-sidebar-accent"></i> {{ __('My Profile') }}</a>
 
-                @if($u->is_sys_admin || $u->can_register_employee)
+                @if($u->is_sys_admin)
                 <div class="tree-item mt-2">
                     <button class="tree-toggle flex items-center gap-2 w-full px-3 py-2 rounded sidebar-hover text-left text-[11px] text-sidebar-accent uppercase tracking-wider font-medium">
                         <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200 {{ $isMasterData ? 'rotate-90' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -100,7 +100,7 @@
                 </div>
                 @endif
 
-                @if($u->is_sys_admin || $u->can_register_course)
+                @if($u->is_sys_admin)
                 <div class="tree-item">
                     <button class="tree-toggle flex items-center gap-2 w-full px-3 py-2 rounded sidebar-hover text-left text-[11px] text-sidebar-accent uppercase tracking-wider font-medium">
                         <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200 {{ $isClassification ? 'rotate-90' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -112,7 +112,7 @@
                 </div>
                 @endif
 
-                @if($u->is_sys_admin || $u->can_setting_attendance)
+                @if($u->is_sys_admin || $u->can_register_course)
                 <div class="tree-item">
                     <button class="tree-toggle flex items-center gap-2 w-full px-3 py-2 rounded sidebar-hover text-left text-[11px] text-sidebar-accent uppercase tracking-wider font-medium">
                         <svg class="tree-arrow w-3 h-3 shrink-0 transition-transform duration-200 {{ $isAdministration ? 'rotate-90' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -120,14 +120,10 @@
                     </button>
                     <div class="tree-children ml-3 space-y-0.5 {{ $isAdministration ? '' : 'hidden' }}">
                         <a href="{{ route('admin.assignments.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.assignments.*') ? 'sidebar-active' : '' }}"><i class="ti ti-mail-forward text-sidebar-accent-dim"></i> {{ __('Assignments') }}</a>
-                        @if($u->is_sys_admin)
                         <a href="{{ route('admin.inquiries.course') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.inquiries.course') ? 'sidebar-active' : '' }}"><i class="ti ti-search text-sidebar-accent-dim"></i> {{ __('Inquiry by Course') }}</a>
                         <a href="{{ route('admin.inquiries.employee') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.inquiries.employee') ? 'sidebar-active' : '' }}"><i class="ti ti-search text-sidebar-accent-dim"></i> {{ __('Inquiry by Employee') }}</a>
                         <a href="{{ route('admin.inquiries.todo-answers') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.inquiries.todo-answers') ? 'sidebar-active' : '' }}"><i class="ti ti-list-details text-sidebar-accent-dim"></i> {{ __('ToDo Answers') }}</a>
-                        @endif
-                        @if($u->is_sys_admin || $u->can_register_course)
                         <a href="{{ route('admin.exam-reports.by-course') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover text-[13px] {{ request()->routeIs('admin.exam-reports.*') ? 'sidebar-active' : '' }}"><i class="ti ti-report-analytics text-sidebar-accent-dim"></i> {{ __('Exam Reports') }}</a>
-                        @endif
                     </div>
                 </div>
                 @endif

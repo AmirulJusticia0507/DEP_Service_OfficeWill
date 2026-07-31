@@ -14,6 +14,7 @@ class CourseController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Course::class);
         $query = Course::with('categoryDetail.category')->withCount('questions');
 
         if ($search = $request->get('search')) {
@@ -27,6 +28,7 @@ class CourseController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Course::class);
         $categories = CourseCategory::with('details')->orderBy('display_order')->get();
 
         return view('courses.create', compact('categories'));
@@ -34,6 +36,7 @@ class CourseController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $this->authorize('create', Course::class);
         $data = $request->validate([
             'category_detail_id' => 'required|exists:course_category_details,id',
             'course_name' => 'required|max:200',
@@ -56,6 +59,7 @@ class CourseController extends Controller
 
     public function edit(Course $course)
     {
+        $this->authorize('update', $course);
         $course->loadCount('questions')->load('materials', 'todos', 'categoryDetail.category');
         $categories = CourseCategory::with('details')->orderBy('display_order')->get();
 
@@ -64,6 +68,7 @@ class CourseController extends Controller
 
     public function update(Request $request, Course $course): RedirectResponse
     {
+        $this->authorize('update', $course);
         $data = $request->validate([
             'category_detail_id' => 'required|exists:course_category_details,id',
             'course_name' => 'required|max:200',
@@ -89,6 +94,7 @@ class CourseController extends Controller
 
     public function storeMaterial(Request $request, Course $course): RedirectResponse
     {
+        $this->authorize('update', $course);
         $data = $request->validate([
             'material_type' => 'required|in:YOUTUBE,PDF',
             'title' => 'required|max:200',
@@ -103,6 +109,7 @@ class CourseController extends Controller
 
     public function destroyMaterial(CourseMaterial $material): RedirectResponse
     {
+        $this->authorize('update', $material->course);
         $material->delete();
 
         return back()->with('success', 'Materi berhasil dihapus.');
@@ -110,6 +117,7 @@ class CourseController extends Controller
 
     public function storeTodo(Request $request, Course $course): RedirectResponse
     {
+        $this->authorize('update', $course);
         $data = $request->validate([
             'todo_type' => 'required|in:QUESTIONNAIRE,REPORT,TEST',
             'title' => 'required|max:200',
@@ -125,6 +133,7 @@ class CourseController extends Controller
 
     public function destroyTodo(CourseTodo $todo): RedirectResponse
     {
+        $this->authorize('update', $todo->course);
         $todo->delete();
 
         return back()->with('success', 'Todo berhasil dihapus.');

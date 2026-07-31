@@ -7,7 +7,6 @@ use App\Models\CourseTodo;
 use App\Models\ExamAnswer;
 use App\Models\ExamAttempt;
 use App\Models\Question;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,8 +16,12 @@ class ExamController extends Controller
     public function start(CourseEnrollment $enrollment, CourseTodo $todo)
     {
         $employee = Auth::guard('employee')->user();
-        if ($enrollment->employee_id !== $employee->id) abort(403);
-        if ($todo->course_id !== $enrollment->course_id) abort(404);
+        if ($enrollment->employee_id !== $employee->id) {
+            abort(403);
+        }
+        if ($todo->course_id !== $enrollment->course_id) {
+            abort(404);
+        }
 
         $questions = Question::where('course_id', $enrollment->course_id)
             ->orderBy('display_order')
@@ -47,7 +50,9 @@ class ExamController extends Controller
     public function submit(Request $request, ExamAttempt $attempt): RedirectResponse
     {
         $employee = Auth::guard('employee')->user();
-        if ($attempt->enrollment->employee_id !== $employee->id) abort(403);
+        if ($attempt->enrollment->employee_id !== $employee->id) {
+            abort(403);
+        }
         if ($attempt->status !== 'IN_PROGRESS') {
             return back()->with('error', 'Ujian ini sudah selesai.');
         }
@@ -57,7 +62,7 @@ class ExamController extends Controller
         $maxScore = $questions->sum('points');
 
         foreach ($questions as $question) {
-            $answerKey = 'question_' . $question->id;
+            $answerKey = 'question_'.$question->id;
             $isCorrect = null;
             $pointsEarned = 0;
             $selectedOptionId = null;
@@ -102,12 +107,12 @@ class ExamController extends Controller
         ]);
 
         // Auto-grade: if no essay, check pass
-        if (!$hasEssay) {
+        if (! $hasEssay) {
             $todo = $attempt->courseTodo;
             $passed = $totalScore >= ($todo->passing_score ?? $maxScore / 2);
             $msg = $passed
-                ? 'Nilai: ' . $totalScore . '/' . $maxScore . ' — ' . __('Pass')
-                : 'Nilai: ' . $totalScore . '/' . $maxScore . ' — ' . __('Fail');
+                ? 'Nilai: '.$totalScore.'/'.$maxScore.' — '.__('Pass')
+                : 'Nilai: '.$totalScore.'/'.$maxScore.' — '.__('Fail');
 
             $response = $attempt->enrollment->todoResponses()
                 ->where('course_todo_id', $todo->id)
@@ -131,7 +136,9 @@ class ExamController extends Controller
     public function grade(Request $request, ExamAttempt $attempt): RedirectResponse
     {
         $employee = Auth::guard('employee')->user();
-        if (!$employee->is_sys_admin && !$employee->can_register_course) abort(403);
+        if (! $employee->hasPermission('can_register_course')) {
+            abort(403);
+        }
 
         $data = $request->validate([
             'scores' => 'required|array',

@@ -70,6 +70,7 @@
             </div>
         </div>
 
+        @if($canManageAuthorities)
         <div class="bg-primary text-white px-4 py-3">
             <h3 class="text-sm font-semibold">{{ __('Account Information') }}</h3>
         </div>
@@ -106,6 +107,7 @@
             <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_register_course" value="1" @checked($employee->can_register_course) class="rounded border-slate-300 dark:border-slate-600 dark:bg-navy-800"> Daftarkan Kursus</label>
             <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="can_setting_attendance" value="1" @checked($employee->can_setting_attendance) class="rounded border-slate-300 dark:border-slate-600 dark:bg-navy-800"> Atur Absensi</label>
         </div>
+        @endif
 
         <div class="px-4 py-3 border-t border-slate-200 dark:border-slate-700 flex items-center gap-2">
             <button type="submit" class="btn-primary">{{ __('Save') }}</button>

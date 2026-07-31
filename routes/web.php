@@ -69,15 +69,15 @@ Route::middleware('auth:employee')->group(function () {
     // Exam
     Route::get('exam/start/{enrollment}/{todo}', [ExamController::class, 'start'])->name('exam.start');
     Route::post('exam/submit/{attempt}', [ExamController::class, 'submit'])->name('exam.submit');
-    Route::post('exam/grade/{attempt}', [ExamController::class, 'grade'])->name('exam.grade');
+    Route::post('exam/grade/{attempt}', [ExamController::class, 'grade'])->name('exam.grade')->middleware('permission:can_register_course');
 
     // CRUD resources
-    Route::resource('employees', EmployeeController::class);
-    Route::resource('courses', CourseController::class);
-    Route::post('courses/{course}/materials', [CourseController::class, 'storeMaterial'])->name('courses.materials.store');
-    Route::delete('materials/{material}', [CourseController::class, 'destroyMaterial'])->name('materials.destroy');
-    Route::post('courses/{course}/todos', [CourseController::class, 'storeTodo'])->name('courses.todos.store');
-    Route::delete('todos/{todo}', [CourseController::class, 'destroyTodo'])->name('todos.destroy');
+    Route::resource('employees', EmployeeController::class)->middleware('permission:can_register_employee');
+    Route::resource('courses', CourseController::class)->middleware('permission:can_register_course');
+    Route::post('courses/{course}/materials', [CourseController::class, 'storeMaterial'])->name('courses.materials.store')->middleware('permission:can_register_course');
+    Route::delete('materials/{material}', [CourseController::class, 'destroyMaterial'])->name('materials.destroy')->middleware('permission:can_register_course');
+    Route::post('courses/{course}/todos', [CourseController::class, 'storeTodo'])->name('courses.todos.store')->middleware('permission:can_register_course');
+    Route::delete('todos/{todo}', [CourseController::class, 'destroyTodo'])->name('todos.destroy')->middleware('permission:can_register_course');
     Route::resource('enrollments', EnrollmentController::class)->except(['create', 'store']);
     Route::post('enrollments/{enrollment}/send-confirmation', [EnrollmentController::class, 'sendConfirmation'])->name('enrollments.send-confirmation');
 
@@ -93,7 +93,7 @@ Route::middleware('auth:employee')->group(function () {
     Route::post('todos/{todo}/report', [TodoController::class, 'submitReport'])->name('todos.report');
     Route::post('todos/{todo}/test', [TodoController::class, 'submitTest'])->name('todos.test');
 
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware('permission:is_sys_admin')->group(function () {
         Route::get('authorities', [AuthorityController::class, 'index'])->name('authorities.index');
         Route::put('authorities/{employee}', [AuthorityController::class, 'update'])->name('authorities.update');
 
@@ -103,6 +103,16 @@ Route::middleware('auth:employee')->group(function () {
         Route::post('course-categories/{courseCategory}/details', [CourseCategoryController::class, 'storeDetail'])->name('course-categories.details.store');
         Route::delete('course-categories/details/{detail}', [CourseCategoryController::class, 'destroyDetail'])->name('course-categories.details.destroy');
 
+        // Mail Log
+        Route::get('mail-log', [MailLogController::class, 'index'])->name('mail-log.index');
+        Route::get('mail-log/message/{id}', [MailLogController::class, 'show'])->name('mail-log.show');
+        Route::put('mail-log/read-all', [MailLogController::class, 'markAllRead'])->name('mail-log.read-all');
+        Route::put('mail-log/{id}/read', [MailLogController::class, 'markRead'])->name('mail-log.read');
+        Route::delete('mail-log/{id}', [MailLogController::class, 'destroy'])->name('mail-log.destroy');
+        Route::delete('mail-log', [MailLogController::class, 'destroyAll'])->name('mail-log.destroy-all');
+    });
+
+    Route::prefix('admin')->name('admin.')->middleware('permission:can_register_course')->group(function () {
         Route::get('assignments', [CourseAssignmentController::class, 'index'])->name('assignments.index');
         Route::get('assignments/create', [CourseAssignmentController::class, 'create'])->name('assignments.create');
         Route::post('assignments', [CourseAssignmentController::class, 'store'])->name('assignments.store');
@@ -123,14 +133,6 @@ Route::middleware('auth:employee')->group(function () {
         // Exam Reports
         Route::get('exam-reports/course', [ExamReportController::class, 'byCourse'])->name('exam-reports.by-course');
         Route::get('exam-reports/employee', [ExamReportController::class, 'byEmployee'])->name('exam-reports.by-employee');
-
-        // Mail Log
-        Route::get('mail-log', [MailLogController::class, 'index'])->name('mail-log.index');
-        Route::get('mail-log/message/{id}', [MailLogController::class, 'show'])->name('mail-log.show');
-        Route::put('mail-log/read-all', [MailLogController::class, 'markAllRead'])->name('mail-log.read-all');
-        Route::put('mail-log/{id}/read', [MailLogController::class, 'markRead'])->name('mail-log.read');
-        Route::delete('mail-log/{id}', [MailLogController::class, 'destroy'])->name('mail-log.destroy');
-        Route::delete('mail-log', [MailLogController::class, 'destroyAll'])->name('mail-log.destroy-all');
     });
 
     Route::post('locale/switch', function (Request $request) {

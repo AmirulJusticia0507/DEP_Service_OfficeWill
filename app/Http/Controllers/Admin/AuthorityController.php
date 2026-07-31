@@ -14,13 +14,15 @@ class AuthorityController extends Controller
     {
         $operator = Auth::guard('employee')->user();
 
+        $this->authorize('viewAuthority', Employee::class);
+
         $query = Employee::where('company_id', $operator->company_id);
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'LIKE', "%{$search}%")
-                  ->orWhere('employee_code', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%");
+                    ->orWhere('employee_code', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
             });
         }
 
@@ -31,6 +33,10 @@ class AuthorityController extends Controller
 
     public function update(Request $request, Employee $employee): RedirectResponse
     {
+        $operator = Auth::guard('employee')->user();
+
+        $this->authorize('manageAuthority', $employee);
+
         $data = $request->validate([
             'is_sys_admin' => 'sometimes|boolean',
             'can_register_employee' => 'sometimes|boolean',
@@ -47,6 +53,6 @@ class AuthorityController extends Controller
 
         $employee->update($data);
 
-        return back()->with('success', 'Authority updated for ' . $employee->full_name);
+        return back()->with('success', 'Authority updated for '.$employee->full_name);
     }
 }

@@ -9,6 +9,12 @@ class Employee extends Authenticatable
 {
     use SoftDeletes;
 
+    protected $hidden = [
+        'password',
+        'mfa_otp_hash',
+        'mfa_otp_expires_at',
+    ];
+
     protected $fillable = [
         'company_id',
         'employee_code',
@@ -55,6 +61,26 @@ class Employee extends Authenticatable
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return (bool) $this->is_sys_admin;
+    }
+
+    public function hasPermission(string ...$permissions): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        foreach ($permissions as $permission) {
+            if ((bool) $this->{$permission}) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function employeeAffiliations()

@@ -24,6 +24,9 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         $operator = Auth::guard('employee')->user();
+
+        $this->authorize('viewAny', Employee::class);
+
         $query = Employee::query()->where('company_id', $operator->company_id);
 
         $query = $this->filterScope->execute($query, $operator);
@@ -43,18 +46,27 @@ class EmployeeController extends Controller
 
     public function create()
     {
-        $company = Auth::guard('employee')->user()->company;
-        $jobs = MasterJob::where('company_id', $company->id)->get();
+        $operator = Auth::guard('employee')->user();
 
-        return view('employees.create', compact('company', 'jobs'));
+        $this->authorize('create', Employee::class);
+
+        $company = $operator->company;
+        $jobs = MasterJob::where('company_id', $company->id)->get();
+        $canManageAuthorities = $operator->is_sys_admin;
+
+        return view('employees.create', compact('company', 'jobs', 'canManageAuthorities'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $operator = Auth::guard('employee')->user();
-        $companyId = $operator->company_id;
 
-        $data = $request->validate([
+        $this->authorize('create', Employee::class);
+
+        $companyId = $operator->company_id;
+        $canManageAuthorities = $operator->is_sys_admin;
+
+        $rules = [
             'employee_code' => 'required|unique:employees,employee_code,NULL,id,company_id,'.$companyId,
             'full_name' => 'required|max:100',
             'kana_name' => 'nullable|max:100',
@@ -64,20 +76,33 @@ class EmployeeController extends Controller
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|in:MALE,FEMALE',
             'address' => 'nullable',
-            'authority_effective_range' => 'required|in:ONLY,BELOW,ALL',
-            'authority_effective_affiliation_code' => 'nullable|max:20',
-            'can_register_employee' => 'boolean',
-            'can_register_course' => 'boolean',
-            'can_setting_attendance' => 'boolean',
-        ]);
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ];
+
+        if ($canManageAuthorities) {
+            $rules += [
+                'authority_effective_range' => 'required|in:ONLY,BELOW,ALL',
+                'authority_effective_affiliation_code' => 'nullable|max:20',
+                'can_register_employee' => 'boolean',
+                'can_register_course' => 'boolean',
+                'can_setting_attendance' => 'boolean',
+            ];
+        }
+
+        $data = $request->validate($rules);
 
         $password = Str::random(12);
 
         $data['company_id'] = $companyId;
         $data['password'] = Hash::make($password);
-        $data['can_register_employee'] = $request->boolean('can_register_employee');
-        $data['can_register_course'] = $request->boolean('can_register_course');
-        $data['can_setting_attendance'] = $request->boolean('can_setting_attendance');
+        $data['is_sys_admin'] = false;
+        $data['can_register_employee'] = $canManageAuthorities ? $request->boolean('can_register_employee') : false;
+        $data['can_register_course'] = $canManageAuthorities ? $request->boolean('can_register_course') : false;
+        $data['can_setting_attendance'] = $canManageAuthorities ? $request->boolean('can_setting_attendance') : false;
+
+        if (! $canManageAuthorities) {
+            unset($data['authority_effective_range'], $data['authority_effective_affiliation_code']);
+        }
 
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('photos', 'public');
@@ -105,16 +130,26 @@ class EmployeeController extends Controller
 
     public function edit(Employee $employee)
     {
-        $company = $employee->company;
+        $operator = Auth::guard('employee')->user();
 
-        return view('employees.edit', compact('employee', 'company'));
+        $this->authorize('update', $employee);
+
+        $company = $employee->company;
+        $canManageAuthorities = $operator->is_sys_admin;
+
+        return view('employees.edit', compact('employee', 'company', 'canManageAuthorities'));
     }
 
     public function update(Request $request, Employee $employee): RedirectResponse
     {
-        $companyId = $employee->company_id;
+        $operator = Auth::guard('employee')->user();
 
-        $data = $request->validate([
+        $this->authorize('update', $employee);
+
+        $companyId = $employee->company_id;
+        $canManageAuthorities = $operator->is_sys_admin;
+
+        $rules = [
             'employee_code' => 'required|unique:employees,employee_code,'.$employee->id.',id,company_id,'.$companyId,
             'full_name' => 'required|max:100',
             'kana_name' => 'nullable|max:100',
@@ -124,17 +159,31 @@ class EmployeeController extends Controller
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|in:MALE,FEMALE',
             'address' => 'nullable',
-            'account_status' => 'required|in:ACTIVE,LOCKED,INACTIVE',
-            'authority_effective_range' => 'required|in:ONLY,BELOW,ALL',
-            'authority_effective_affiliation_code' => 'nullable|max:20',
-            'can_register_employee' => 'boolean',
-            'can_register_course' => 'boolean',
-            'can_setting_attendance' => 'boolean',
-        ]);
+        ];
 
-        $data['can_register_employee'] = $request->boolean('can_register_employee');
-        $data['can_register_course'] = $request->boolean('can_register_course');
-        $data['can_setting_attendance'] = $request->boolean('can_setting_attendance');
+        if ($canManageAuthorities) {
+            $rules += [
+                'account_status' => 'required|in:ACTIVE,LOCKED,INACTIVE',
+                'authority_effective_range' => 'required|in:ONLY,BELOW,ALL',
+                'authority_effective_affiliation_code' => 'nullable|max:20',
+                'can_register_employee' => 'boolean',
+                'can_register_course' => 'boolean',
+                'can_setting_attendance' => 'boolean',
+            ];
+        }
+
+        $data = $request->validate($rules);
+
+        if ($canManageAuthorities) {
+            $data['can_register_employee'] = $request->boolean('can_register_employee');
+            $data['can_register_course'] = $request->boolean('can_register_course');
+            $data['can_setting_attendance'] = $request->boolean('can_setting_attendance');
+        } else {
+            unset($data['account_status'], $data['authority_effective_range'], $data['authority_effective_affiliation_code']);
+            $data['can_register_employee'] = false;
+            $data['can_register_course'] = false;
+            $data['can_setting_attendance'] = false;
+        }
 
         if ($request->hasFile('photo')) {
             $request->validate(['photo' => 'image|mimes:jpg,jpeg,png|max:2048']);
