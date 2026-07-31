@@ -14,6 +14,7 @@ class QuestionController extends Controller
     public function index(Course $course)
     {
         $course->load('questions.options');
+
         return view('admin.questions.index', compact('course'));
     }
 
@@ -45,7 +46,7 @@ class QuestionController extends Controller
             foreach ($data['options'] as $i => $opt) {
                 $question->options()->create([
                     'option_text' => $opt['option_text'],
-                    'is_correct' => !empty($opt['is_correct']),
+                    'is_correct' => ! empty($opt['is_correct']),
                     'display_order' => $i,
                 ]);
             }
@@ -57,12 +58,17 @@ class QuestionController extends Controller
 
     public function edit(Course $course, Question $question)
     {
+        abort_if($question->course_id !== $course->id, 404);
+
         $question->load('options');
+
         return view('admin.questions.form', compact('course', 'question'));
     }
 
     public function update(Request $request, Course $course, Question $question): RedirectResponse
     {
+        abort_if($question->course_id !== $course->id, 404);
+
         $data = $request->validate([
             'question_type' => 'required|in:MCQ,TRUE_FALSE,ESSAY',
             'question_text' => 'required',
@@ -86,17 +92,17 @@ class QuestionController extends Controller
             $keepIds = [];
 
             foreach ($data['options'] as $i => $opt) {
-                if (!empty($opt['id'])) {
-                    QuestionOption::where('id', $opt['id'])->update([
+                if (! empty($opt['id'])) {
+                    $question->options()->whereKey($opt['id'])->update([
                         'option_text' => $opt['option_text'],
-                        'is_correct' => !empty($opt['is_correct']),
+                        'is_correct' => ! empty($opt['is_correct']),
                         'display_order' => $i,
                     ]);
                     $keepIds[] = $opt['id'];
                 } else {
                     $new = $question->options()->create([
                         'option_text' => $opt['option_text'],
-                        'is_correct' => !empty($opt['is_correct']),
+                        'is_correct' => ! empty($opt['is_correct']),
                         'display_order' => $i,
                     ]);
                     $keepIds[] = $new->id;
@@ -113,8 +119,11 @@ class QuestionController extends Controller
 
     public function destroy(Course $course, Question $question): RedirectResponse
     {
+        abort_if($question->course_id !== $course->id, 404);
+
         $question->options()->delete();
         $question->delete();
+
         return redirect()->route('admin.questions.index', $course)
             ->with('success', __('Deleted successfully'));
     }

@@ -33,14 +33,17 @@ class InquiryController extends Controller
 
     public function byEmployee(Request $request)
     {
-        $employees = Employee::where('company_id', Auth::guard('employee')->user()->company_id)
+        $operator = Auth::guard('employee')->user();
+        $companyId = $operator->company_id;
+
+        $employees = Employee::where('company_id', $companyId)
             ->orderBy('full_name')
             ->get();
         $selectedEmployee = null;
         $enrollments = collect();
 
         if ($employeeId = $request->get('employee_id')) {
-            $selectedEmployee = Employee::find($employeeId);
+            $selectedEmployee = Employee::where('company_id', $companyId)->findOrFail($employeeId);
             $enrollments = CourseEnrollment::with('course', 'todoResponses')
                 ->where('employee_id', $employeeId)
                 ->paginate(20)->withQueryString();
@@ -51,6 +54,9 @@ class InquiryController extends Controller
 
     public function todoAnswers(Request $request)
     {
+        $operator = Auth::guard('employee')->user();
+        $companyId = $operator->company_id;
+
         $courses = Course::orderBy('course_name')->get();
         $selectedCourse = null;
         $selectedTodo = null;
@@ -65,6 +71,9 @@ class InquiryController extends Controller
         if ($todoId = $request->get('todo_id')) {
             $selectedTodo = CourseTodo::with('course')->find($todoId);
             $responses = $selectedTodo?->responses()
+                ->whereHas('enrollment.employee', function ($q) use ($companyId) {
+                    $q->where('company_id', $companyId);
+                })
                 ->with('enrollment.employee')
                 ->paginate(20)->withQueryString();
         }

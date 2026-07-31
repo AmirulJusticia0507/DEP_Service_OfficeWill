@@ -65,7 +65,7 @@
                 $u = auth('employee')->user();
                 $isMasterData = request()->routeIs('admin.affiliations.*') || request()->routeIs('admin.positions.*') || request()->routeIs('admin.authorities.*');
                 $isClassification = request()->routeIs('admin.course-categories.*');
-                $isAdministration = request()->routeIs('admin.assignments.*') || request()->routeIs('admin.inquiries.*') || request()->routeIs('admin.exam-reports.*') || request()->routeIs('admin.mail-log.*');
+                $isAdministration = request()->routeIs('admin.assignments.*') || request()->routeIs('admin.inquiries.*') || request()->routeIs('admin.exam-reports.*');
             @endphp
             <nav class="flex-1 overflow-y-auto px-3 py-4 text-sm space-y-0.5">
                 <a href="{{ route('dashboard') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('dashboard') ? 'sidebar-active' : '' }}"><i class="ti ti-layout-dashboard text-sidebar-accent"></i> {{ __('Dashboard') }}</a>
