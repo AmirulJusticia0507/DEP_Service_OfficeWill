@@ -49,7 +49,7 @@
                             <td class="text-xs">{{ $en->status === 'COMPLETED' ? $en->updated_at->format('d M Y') : '-' }}</td>
                             <td>
                                 @if(isset($certificates[$en->course_id]))
-                                    <a href="{{ route('certificates.download', $certificates[$en->course_id]) }}" class="text-gold-600 hover:underline text-xs flex items-center gap-1">
+                                    <a href="{{ route('certificates.download', $certificates[$en->course_id]) }}" class="text-accent hover:underline text-xs flex items-center gap-1">
                                         <i class="ti ti-download"></i> {{ __('Download') }}
                                     </a>
                                 @elseif($en->status === 'COMPLETED')

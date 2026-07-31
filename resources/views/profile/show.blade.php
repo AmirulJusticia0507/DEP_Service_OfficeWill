@@ -9,7 +9,7 @@
     <div class="bg-white rounded shadow dark:bg-navy-800 overflow-hidden">
         <div class="bg-primary p-6 text-white">
             <div class="flex items-center gap-4">
-                <div class="w-16 h-16 rounded-full bg-maroon-500 flex items-center justify-center text-2xl font-bold overflow-hidden">
+                <div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-2xl font-bold overflow-hidden">
                     @if($employee->photo)
                         <img src="{{ Storage::url($employee->photo) }}" class="w-full h-full object-cover">
                     @else
@@ -18,7 +18,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold">{{ $employee->full_name }}</h1>
-                    <p class="text-sm text-gold-300">{{ $employee->email }}</p>
+                    <p class="text-sm text-sidebar-accent-dim">{{ $employee->email }}</p>
                 </div>
             </div>
         </div>

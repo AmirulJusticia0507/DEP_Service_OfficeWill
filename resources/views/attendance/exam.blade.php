@@ -15,7 +15,7 @@
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{{ $todo->description }}</p>
             </div>
             <div class="text-right">
-                <div id="timer" class="text-2xl font-mono font-bold text-gold-600 dark:text-gold-400">--:--</div>
+                <div id="timer" class="text-2xl font-mono font-bold text-accent">--:--</div>
                 <p class="text-[10px] text-slate-400 mt-0.5">sisa waktu</p>
             </div>
         </div>
@@ -32,7 +32,7 @@
             @foreach($questions as $index => $q)
             <div class="bg-white rounded shadow p-5 dark:bg-navy-800">
                 <div class="flex items-start gap-2 mb-3">
-                    <span class="text-xs font-bold text-maroon-700 dark:text-gold-400 bg-maroon-100 dark:bg-maroon-900 w-6 h-6 rounded-full flex items-center justify-center shrink-0">{{ $index + 1 }}</span>
+                    <span class="text-xs font-bold text-accent bg-primary-10 w-6 h-6 rounded-full flex items-center justify-center shrink-0">{{ $index + 1 }}</span>
                     <div class="flex-1">
                         <p class="text-sm font-medium text-slate-800 dark:text-slate-100">{{ $q->question_text }}</p>
                         <span class="text-[10px] text-slate-400">{{ $q->points }} pts | {{ $q->question_type }}</span>
@@ -43,7 +43,7 @@
                     <div class="space-y-2 ml-8">
                         @foreach($q->options as $opt)
                         <label class="flex items-center gap-2 text-sm cursor-pointer p-2 rounded hover:bg-slate-50 dark:hover:bg-navy-900">
-                            <input type="radio" name="question_{{ $q->id }}" value="{{ $opt->id }}" class="accent-maroon-700" required>
+                            <input type="radio" name="question_{{ $q->id }}" value="{{ $opt->id }}" class="accent-primary" required>
                             {{ $opt->option_text }}
                         </label>
                         @endforeach
@@ -52,7 +52,7 @@
                     <div class="space-y-2 ml-8">
                         @foreach($q->options as $opt)
                         <label class="flex items-center gap-2 text-sm cursor-pointer p-2 rounded hover:bg-slate-50 dark:hover:bg-navy-900">
-                            <input type="radio" name="question_{{ $q->id }}" value="{{ $opt->id }}" class="accent-maroon-700" required>
+                            <input type="radio" name="question_{{ $q->id }}" value="{{ $opt->id }}" class="accent-primary" required>
                             {{ $opt->option_text }}
                         </label>
                         @endforeach
@@ -67,7 +67,7 @@
         </div>
 
         <div class="flex items-center justify-between gap-2 mt-6 bg-white rounded shadow p-4 dark:bg-navy-800 sticky bottom-0">
-            <span id="timerFooter" class="text-sm font-mono text-gold-600 dark:text-gold-400 font-semibold"></span>
+            <span id="timerFooter" class="text-sm font-mono text-accent font-semibold"></span>
             <div class="flex items-center gap-2">
                 <a href="{{ route('attendance.score', $enrollment) }}" class="btn-secondary">{{ __('Cancel') }}</a>
                 <button type="submit" class="btn-gold py-2 px-6">{{ __('Submit Answer') }}</button>
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (remaining <= 300 && remaining > 0) {
             timerEl.classList.add('text-rose-500');
-            timerEl.classList.remove('text-gold-600');
+            timerEl.classList.remove('text-accent');
         }
 
         if (remaining <= 0) {

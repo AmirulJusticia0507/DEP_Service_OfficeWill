@@ -28,7 +28,7 @@
         <div class="bg-white rounded shadow dark:bg-navy-800">
             <div class="px-4 py-3 bg-primary text-white rounded-t flex items-center justify-between">
                 <h3 class="text-sm font-semibold">{{ $employeeName }}</h3>
-                <span class="text-xs text-gold-300">Attempts: {{ $empAttempts->count() }}</span>
+                <span class="text-xs text-sidebar-accent-dim">Attempts: {{ $empAttempts->count() }}</span>
             </div>
             <div class="p-4">
                 @foreach($empAttempts as $attempt)

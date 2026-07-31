@@ -10,7 +10,7 @@
 <div class="bg-white rounded shadow mb-6 overflow-hidden dark:bg-navy-800">
     <div class="bg-primary text-white p-4">
         <h1 class="text-lg font-bold">{{ $course->course_name }}</h1>
-        <p class="text-xs text-gold-300 mt-0.5">{{ $course->categoryDetail->detail_name ?? '-' }}</p>
+        <p class="text-xs text-sidebar-accent-dim mt-0.5">{{ $course->categoryDetail->detail_name ?? '-' }}</p>
     </div>
     <div class="p-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
         <div>
@@ -41,7 +41,7 @@
 @if($course->materials->isNotEmpty())
 <div class="bg-white rounded shadow mb-6 dark:bg-navy-800">
     <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-700">
-        <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-200"><i class="ti ti-book text-gold-500 mr-1"></i> {{ __('Materials') }}</h3>
+        <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-200"><i class="ti ti-book text-accent mr-1"></i> {{ __('Materials') }}</h3>
     </div>
     <div class="p-4 space-y-2">
         @foreach($course->materials as $mat)
@@ -58,7 +58,7 @@
 @if($course->todos->isNotEmpty())
 <div class="bg-white rounded shadow mb-6 dark:bg-navy-800">
     <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-700">
-        <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-200"><i class="ti ti-checklist text-gold-500 mr-1"></i> {{ __('Post-Course ToDo') }}</h3>
+        <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-200"><i class="ti ti-checklist text-accent mr-1"></i> {{ __('Post-Course ToDo') }}</h3>
     </div>
     <div class="p-4 space-y-2">
         @foreach($course->todos as $todo)

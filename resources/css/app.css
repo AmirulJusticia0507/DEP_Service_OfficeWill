@@ -108,6 +108,9 @@
 .bg-primary {
     background-color: var(--primary);
 }
+.bg-primary-10 {
+    background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+}
 .text-accent {
     color: var(--accent);
 }
