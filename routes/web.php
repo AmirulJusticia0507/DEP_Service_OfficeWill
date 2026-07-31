@@ -34,13 +34,13 @@ Route::get('certificates/verify/{certificateNumber}', [CertificateController::cl
 
 Route::middleware('guest:employee')->group(function () {
     Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('reissue-password', [AuthController::class, 'reissuePassword'])->name('reissue-password');
+    Route::post('login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+    Route::post('reissue-password', [AuthController::class, 'reissuePassword'])->middleware('throttle:3,1')->name('reissue-password');
 });
 
 Route::get('mfa/verify', [MfaController::class, 'showVerifyForm'])->name('mfa.verify');
-Route::post('mfa/verify', [MfaController::class, 'verify']);
-Route::post('mfa/resend', [MfaController::class, 'resend'])->name('mfa.resend');
+Route::post('mfa/verify', [MfaController::class, 'verify'])->middleware('throttle:5,1');
+Route::post('mfa/resend', [MfaController::class, 'resend'])->middleware('throttle:3,1')->name('mfa.resend');
 Route::post('mfa/cancel', [MfaController::class, 'cancel'])->name('mfa.cancel');
 
 Route::middleware('auth:employee')->group(function () {

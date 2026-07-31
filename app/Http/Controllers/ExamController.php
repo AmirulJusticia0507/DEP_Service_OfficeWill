@@ -180,7 +180,7 @@ class ExamController extends Controller
 
             $totalScore = 0;
             foreach ($data['scores'] as $answerId => $score) {
-                $answer = ExamAnswer::findOrFail($answerId);
+                $answer = ExamAnswer::where('exam_attempt_id', $locked->id)->findOrFail($answerId);
                 $answer->update([
                     'points_earned' => $score,
                     'is_correct' => $score > 0,

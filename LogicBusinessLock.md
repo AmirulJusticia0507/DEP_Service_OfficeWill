@@ -48,3 +48,20 @@ Diterapkan di `EmployeeController` (`storeAssignment`, `endAssignment`, `destroy
 2. **Scope afiliasi**: kode afiliasi wajib milik company yang sama (`exists:...company_id`) dan dalam cakupan operator (`ScopeService::canAccessAffiliation`), selain itu `403`.
 3. **Overlap lock**: periode baru (incl. open-ended `end_date` null) ditolak bila tumpang tindih dengan penugasan yang sudah ada untuk karyawan yang sama — baik kode afiliasi yang sama maupun `job_id` yang sama. Dijalankan di dalam `DB::transaction` dengan `lockForUpdate()` terhadap baris employee sehingga dua create bersamaan tidak bisa lolos.
 4. **Edit after lock**: penugasan yang sudah ditutup (`end_date` terisi) tidak dapat ditutup lagi; `end_date` tidak boleh sebelum `start_date`.
+
+## Certificate Generate Lock (server-side enforcement)
+
+Diterapkan di `CertificateController::generate()`:
+
+1. **Ownership**: enrollment milik karyawan yang login (403).
+2. **Status lock**: sertifikat hanya untuk enrollment berstatus `COMPLETED`.
+3. **Idempotency + atomicity**: pemeriksaan sertifikat yang sudah ada dan pembuatan file PDF + baris `certificates` dijalankan dalam satu `DB::transaction` dengan `lockForUpdate()` terhadap enrollment — double click hanya menghasilkan satu sertifikat; file PDF dibersihkan bila transaksi gagal.
+4. **Download guard**: `download()` hanya untuk pemilik (403) dan menolak bila file tidak ada (404).
+
+## Rate Limit (brute force / mail flood)
+
+Diterapkan di `routes/web.php`:
+
+- `POST /login` → `throttle:10,1` (10 percobaan per menit per IP), selain lock akun 5x gagal.
+- `POST /reissue-password` → `throttle:3,1` (cegah spam email reissue password).
+- `POST /mfa/verify` → `throttle:5,1`; `POST /mfa/resend` → `throttle:3,1`.
