@@ -65,7 +65,7 @@
                 $u = auth('employee')->user();
                 $isMasterData = request()->routeIs('admin.affiliations.*') || request()->routeIs('admin.positions.*') || request()->routeIs('admin.authorities.*');
                 $isClassification = request()->routeIs('admin.course-categories.*');
-                $isAdministration = request()->routeIs('admin.assignments.*') || request()->routeIs('admin.inquiries.*') || request()->routeIs('admin.exam-reports.*');
+                $isAdministration = request()->routeIs('admin.assignments.*') || request()->routeIs('admin.inquiries.*') || request()->routeIs('admin.exam-reports.*') || request()->routeIs('admin.mail-log.*');
             @endphp
             <nav class="flex-1 overflow-y-auto px-3 py-4 text-sm space-y-0.5">
                 <a href="{{ route('dashboard') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('dashboard') ? 'sidebar-active' : '' }}"><i class="ti ti-layout-dashboard text-sidebar-accent"></i> {{ __('Dashboard') }}</a>
@@ -80,6 +80,9 @@
                 @endif
                 @if($u->is_sys_admin || $u->can_setting_attendance)
                 <a href="{{ route('attendance.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('attendance.*') ? 'sidebar-active' : '' }}"><i class="ti ti-calendar-check text-sidebar-accent"></i> {{ __('Attendance') }}</a>
+                @endif
+                @if($u->is_sys_admin)
+                <a href="{{ route('admin.mail-log.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('admin.mail-log.*') ? 'sidebar-active' : '' }}"><i class="ti ti-mail text-sidebar-accent"></i> {{ __('Mail Log') }}</a>
                 @endif
                 <a href="{{ route('profile.show') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('profile.*') ? 'sidebar-active' : '' }}"><i class="ti ti-user-circle text-sidebar-accent"></i> {{ __('My Profile') }}</a>
 
@@ -238,7 +241,7 @@
 
         function updateDarkUI() {
             const isDark = document.documentElement.classList.contains('dark');
-            icon.textContent = isDark ? '☀️' : '🌙';
+            if (icon) icon.textContent = isDark ? '☀️' : '🌙';
             if (label) label.textContent = isDark ? '{{ __("Light Mode") }}' : '{{ __("Dark Mode") }}';
         }
 

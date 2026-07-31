@@ -7,7 +7,6 @@ use App\Models\CourseEnrollment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
@@ -16,12 +15,14 @@ class ProfileController extends Controller
     {
         $employee = Auth::guard('employee')->user();
         $employee->load('employeeAffiliations.affiliation', 'enrollments.course');
+
         return view('profile.show', compact('employee'));
     }
 
     public function edit()
     {
         $employee = Auth::guard('employee')->user();
+
         return view('profile.edit', compact('employee'));
     }
 
@@ -48,6 +49,10 @@ class ProfileController extends Controller
         }
 
         $employee->update($data);
+
+        $employee->update([
+            'mfa_enabled' => $request->boolean('mfa_enabled'),
+        ]);
 
         return redirect()->route('profile.show')->with('success', __('Updated successfully'));
     }

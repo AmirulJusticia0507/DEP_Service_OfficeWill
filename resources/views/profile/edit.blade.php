@@ -54,6 +54,15 @@
                 @endif
                 <input type="file" name="photo" accept="image/*" class="form-input">
             </div>
+            <div class="mt-6 border-t border-slate-200 dark:border-slate-700 pt-4">
+                <label class="flex items-start gap-3 cursor-pointer">
+                    <input type="checkbox" name="mfa_enabled" value="1" @checked($employee->mfa_enabled) class="mt-0.5 w-4 h-4 accent-[var(--primary)]">
+                    <span>
+                        <span class="block text-sm font-medium">{{ __('Two-Step Verification (MFA)') }}</span>
+                        <span class="block text-xs text-slate-400">{{ __('Require a one-time code sent to your email after login.') }}</span>
+                    </span>
+                </label>
+            </div>
             <div class="flex items-center gap-2 mt-6">
                 <button type="submit" class="btn-primary">{{ __('Save') }}</button>
                 <a href="{{ route('profile.show') }}" class="btn-secondary">{{ __('Cancel') }}</a>

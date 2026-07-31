@@ -2,6 +2,7 @@
 
 namespace App\Actions\Auth;
 
+use App\Helpers\NotificationHelper;
 use App\Mail\AccountLockedMail;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Mail;
@@ -26,6 +27,18 @@ class HandleFailedLoginAction
                 ));
             } catch (\Exception $e) {
                 // email failed silently
+            }
+
+            try {
+                NotificationHelper::send(
+                    $employee,
+                    'account_locked',
+                    'Account Locked',
+                    'Your account has been locked due to multiple failed login attempts. Please contact the admin.',
+                    route('login')
+                );
+            } catch (\Exception $e) {
+                // notification failed silently
             }
 
             throw ValidationException::withMessages([

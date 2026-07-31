@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'mailpit' => [
+        'api_url' => env('MAILPIT_API_URL', 'http://127.0.0.1:8025'),
+    ],
+
 ];

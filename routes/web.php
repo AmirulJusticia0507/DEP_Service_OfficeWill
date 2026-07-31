@@ -5,7 +5,9 @@ use App\Http\Controllers\Admin\AuthorityController;
 use App\Http\Controllers\Admin\CourseAssignmentController;
 use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ExamReportController;
 use App\Http\Controllers\Admin\InquiryController;
+use App\Http\Controllers\Admin\MailLogController;
 use App\Http\Controllers\Admin\PositionController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\AttendanceController;
@@ -15,14 +17,17 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\MfaController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicController;
 use App\Http\Controllers\TodoController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
-Route::get('/', [\App\Http\Controllers\PublicController::class, 'welcome']);
+Route::get('/', [PublicController::class, 'welcome']);
 
 Route::get('certificates/verify', [CertificateController::class, 'verifyForm'])->name('certificates.verify.form');
 Route::get('certificates/verify/{certificateNumber}', [CertificateController::class, 'verify'])->name('certificates.verify');
@@ -32,6 +37,11 @@ Route::middleware('guest:employee')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('reissue-password', [AuthController::class, 'reissuePassword'])->name('reissue-password');
 });
+
+Route::get('mfa/verify', [MfaController::class, 'showVerifyForm'])->name('mfa.verify');
+Route::post('mfa/verify', [MfaController::class, 'verify']);
+Route::post('mfa/resend', [MfaController::class, 'resend'])->name('mfa.resend');
+Route::post('mfa/cancel', [MfaController::class, 'cancel'])->name('mfa.cancel');
 
 Route::middleware('auth:employee')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
@@ -111,16 +121,25 @@ Route::middleware('auth:employee')->group(function () {
         Route::delete('courses/{course}/questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
 
         // Exam Reports
-        Route::get('exam-reports/course', [\App\Http\Controllers\Admin\ExamReportController::class, 'byCourse'])->name('exam-reports.by-course');
-        Route::get('exam-reports/employee', [\App\Http\Controllers\Admin\ExamReportController::class, 'byEmployee'])->name('exam-reports.by-employee');
+        Route::get('exam-reports/course', [ExamReportController::class, 'byCourse'])->name('exam-reports.by-course');
+        Route::get('exam-reports/employee', [ExamReportController::class, 'byEmployee'])->name('exam-reports.by-employee');
+
+        // Mail Log
+        Route::get('mail-log', [MailLogController::class, 'index'])->name('mail-log.index');
+        Route::get('mail-log/message/{id}', [MailLogController::class, 'show'])->name('mail-log.show');
+        Route::put('mail-log/read-all', [MailLogController::class, 'markAllRead'])->name('mail-log.read-all');
+        Route::put('mail-log/{id}/read', [MailLogController::class, 'markRead'])->name('mail-log.read');
+        Route::delete('mail-log/{id}', [MailLogController::class, 'destroy'])->name('mail-log.destroy');
+        Route::delete('mail-log', [MailLogController::class, 'destroyAll'])->name('mail-log.destroy-all');
     });
 
-    Route::post('locale/switch', function (\Illuminate\Http\Request $request) {
+    Route::post('locale/switch', function (Request $request) {
         $locale = $request->input('locale', 'en');
         if (in_array($locale, ['en', 'ja', 'id'])) {
             Session::put('locale', $locale);
             App::setLocale($locale);
         }
+
         return redirect()->back();
     })->name('locale.switch');
 });

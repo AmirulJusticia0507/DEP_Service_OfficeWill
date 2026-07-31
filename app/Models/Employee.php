@@ -20,6 +20,9 @@ class Employee extends Authenticatable
         'password_error_count',
         'account_status',
         'account_locked_at',
+        'mfa_enabled',
+        'mfa_otp_hash',
+        'mfa_otp_expires_at',
         'is_sys_admin',
         'can_register_employee',
         'can_register_course',
@@ -39,6 +42,8 @@ class Employee extends Authenticatable
         return [
             'date_of_birth' => 'date',
             'password_error_count' => 'integer',
+            'mfa_enabled' => 'boolean',
+            'mfa_otp_expires_at' => 'datetime',
             'is_sys_admin' => 'boolean',
             'can_register_employee' => 'boolean',
             'can_register_course' => 'boolean',
