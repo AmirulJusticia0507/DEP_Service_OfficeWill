@@ -83,6 +83,7 @@
                 @endif
                 @if($u->is_sys_admin)
                 <a href="{{ route('admin.mail-log.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('admin.mail-log.*') ? 'sidebar-active' : '' }}"><i class="ti ti-mail text-sidebar-accent"></i> {{ __('Mail Log') }}</a>
+                <a href="{{ route('admin.logs.index') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('admin.logs.*') ? 'sidebar-active' : '' }}"><i class="ti ti-history text-sidebar-accent"></i> {{ __('Activity Logs') }}</a>
                 @endif
                 <a href="{{ route('profile.show') }}" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded sidebar-hover {{ request()->routeIs('profile.*') ? 'sidebar-active' : '' }}"><i class="ti ti-user-circle text-sidebar-accent"></i> {{ __('My Profile') }}</a>
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\NotificationHelper;
 use App\Mail\OtpVerificationMail;
 use App\Models\Employee;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +79,8 @@ class MfaController extends Controller
 
         Auth::guard('employee')->login($employee);
         $request->session()->regenerate();
+
+        ActivityLogger::log('login', "User {$employee->email} completed MFA login.", $employee);
 
         return redirect()->route('mfa.verify');
     }

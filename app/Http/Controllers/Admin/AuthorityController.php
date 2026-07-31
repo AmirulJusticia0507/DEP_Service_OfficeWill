@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +53,8 @@ class AuthorityController extends Controller
         $data['can_setting_attendance'] = $request->boolean('can_setting_attendance');
 
         $employee->update($data);
+
+        ActivityLogger::log('authority_update', "Authority updated for {$employee->full_name} (#{$employee->employee_code}).", $employee, $data);
 
         return back()->with('success', 'Authority updated for '.$employee->full_name);
     }

@@ -6,6 +6,7 @@ use App\Helpers\NotificationHelper;
 use App\Mail\CourseCancelledMail;
 use App\Mail\CourseConfirmationMail;
 use App\Models\CourseEnrollment;
+use App\Services\ActivityLogger;
 use App\Services\ScopeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -55,6 +56,11 @@ class EnrollmentController extends Controller
         $oldStatus = $enrollment->status;
         $enrollment->update($data);
 
+        ActivityLogger::log('enrollment_update', "Enrollment for {$enrollment->employee_id} in course #{$enrollment->course_id} changed to {$data['status']}.", $enrollment, [
+            'old_status' => $oldStatus,
+            'new_status' => $data['status'],
+        ]);
+
         if ($data['status'] === 'CANCELLED' && $oldStatus !== 'CANCELLED') {
             $enrollment->load(['employee', 'course']);
             $employee = $enrollment->employee;
@@ -102,6 +108,8 @@ class EnrollmentController extends Controller
                 route('attendance.show', $enrollment->course_id)
             );
 
+            ActivityLogger::log('enrollment_confirmation', "Sent course confirmation to {$employee->email} for {$enrollment->course->course_name}.", $enrollment);
+
             return back()->with('success', "Email konfirmasi pendaftaran berhasil dikirim ke {$employee->email}.");
         }
 
@@ -130,6 +138,8 @@ class EnrollmentController extends Controller
                 "Your enrollment in {$enrollment->course->course_name} has been cancelled."
             );
 
+            ActivityLogger::log('enrollment_cancellation', "Sent course cancellation to {$employee->email} for {$enrollment->course->course_name}.", $enrollment);
+
             return back()->with('success', "Email pembatalan kursus berhasil dikirim ke {$employee->email}.");
         }
 
@@ -144,6 +154,8 @@ class EnrollmentController extends Controller
 
         $enrollment->load(['employee', 'course']);
         $enrollment->update(['status' => 'CANCELLED']);
+
+        ActivityLogger::log('enrollment_destroy', "Cancelled enrollment of {$enrollment->employee->full_name} in {$enrollment->course->course_name}.", $enrollment);
 
         $employee = $enrollment->employee;
         if ($employee && $employee->email) {

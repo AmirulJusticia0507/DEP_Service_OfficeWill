@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AffiliationController;
 use App\Http\Controllers\Admin\AuthorityController;
 use App\Http\Controllers\Admin\CourseAssignmentController;
@@ -63,6 +64,7 @@ Route::middleware('auth:employee')->group(function () {
 
     // Notifications (API)
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread-count');
     Route::post('notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
     Route::post('notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
 
@@ -113,6 +115,9 @@ Route::middleware('auth:employee')->group(function () {
         Route::put('mail-log/{id}/read', [MailLogController::class, 'markRead'])->name('mail-log.read');
         Route::delete('mail-log/{id}', [MailLogController::class, 'destroy'])->name('mail-log.destroy');
         Route::delete('mail-log', [MailLogController::class, 'destroyAll'])->name('mail-log.destroy-all');
+
+        // Activity Logs
+        Route::get('logs', [ActivityLogController::class, 'index'])->name('logs.index');
     });
 
     Route::prefix('admin')->name('admin.')->middleware('permission:can_register_course')->group(function () {

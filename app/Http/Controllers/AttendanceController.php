@@ -9,6 +9,7 @@ use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\ExamAttempt;
+use App\Services\ActivityLogger;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -157,6 +158,10 @@ class AttendanceController extends Controller
         if (! $completed) {
             return redirect('/attendance')->with('info', 'Kursus ini sudah selesai dikerjakan.');
         }
+
+        ActivityLogger::log('course_completed', "Completed course {$enrollment->course->course_name} and issued certificate {$certNumber}.", $enrollment, [
+            'certificate_number' => $certNumber,
+        ]);
 
         $certificate = Certificate::where('enrollment_id', $enrollment->id)->first();
 

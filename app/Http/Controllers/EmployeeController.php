@@ -8,6 +8,7 @@ use App\Models\Affiliation;
 use App\Models\Employee;
 use App\Models\EmployeeAffiliation;
 use App\Models\MasterJob;
+use App\Services\ActivityLogger;
 use App\Services\ScopeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -129,6 +130,8 @@ class EmployeeController extends Controller
             route('login')
         );
 
+        ActivityLogger::log('employee_create', "Registered employee {$employee->full_name} (#{$employee->employee_code}).", $employee);
+
         return redirect('/employees')->with('success', 'Karyawan berhasil didaftarkan.');
     }
 
@@ -208,6 +211,8 @@ class EmployeeController extends Controller
 
         $employee->update($data);
 
+        ActivityLogger::log('employee_update', "Updated employee {$employee->full_name} (#{$employee->employee_code}).", $employee);
+
         return redirect('/employees')->with('success', 'Data karyawan berhasil diperbarui.');
     }
 
@@ -255,6 +260,8 @@ class EmployeeController extends Controller
             'end_date' => $data['end_date'] ?? null,
         ]);
 
+        ActivityLogger::log('assignment_create', "Assigned {$employee->full_name} to {$data['affiliation_code']} starting {$data['start_date']}.", $employee, $data);
+
         return back()->with('success', 'Penugasan berhasil ditambahkan.');
     }
 
@@ -282,6 +289,10 @@ class EmployeeController extends Controller
 
         $assignment->update(['end_date' => $endDate]);
 
+        ActivityLogger::log('assignment_end', "Closed {$assignment->affiliation_code} assignment for {$employee->full_name} on {$endDate}.", $assignment, [
+            'end_date' => $endDate,
+        ]);
+
         return back()->with('success', 'Penugasan berhasil ditutup.');
     }
 
@@ -294,6 +305,8 @@ class EmployeeController extends Controller
         }
 
         $assignment->delete();
+
+        ActivityLogger::log('assignment_destroy', "Deleted {$assignment->affiliation_code} assignment for {$employee->full_name}.", $assignment);
 
         return back()->with('success', 'Penugasan berhasil dihapus.');
     }

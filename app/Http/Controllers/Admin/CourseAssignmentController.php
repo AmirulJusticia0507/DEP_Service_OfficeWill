@@ -10,6 +10,7 @@ use App\Mail\CourseConfirmationMail;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Employee;
+use App\Services\ActivityLogger;
 use App\Services\ScopeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -64,6 +65,12 @@ class CourseAssignmentController extends Controller
             $data['enrollment_deadline']
         );
 
+        ActivityLogger::log('course_assignment', "Assigned course {$course->course_name} to {$count} employees (deadline {$data['enrollment_deadline']}).", $course, [
+            'employee_ids' => $targets->pluck('id')->all(),
+            'count' => $count,
+            'enrollment_deadline' => $data['enrollment_deadline'],
+        ]);
+
         foreach ($targets as $employee) {
             Mail::to($employee->email)->queue(new CourseConfirmationMail(
                 $employee->full_name,
@@ -106,6 +113,8 @@ class CourseAssignmentController extends Controller
         $employee = $enrollment->employee;
 
         $enrollment->update(['status' => 'CANCELLED']);
+
+        ActivityLogger::log('assignment_cancel', "Cancelled enrollment of {$employee->full_name} in {$enrollment->course->course_name}.", $enrollment);
 
         Mail::to($employee->email)->queue(new CourseCancelledMail(
             $employee->full_name,

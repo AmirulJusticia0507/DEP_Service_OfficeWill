@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Certificate;
 use App\Models\CourseEnrollment;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +53,10 @@ class ProfileController extends Controller
 
         $employee->update([
             'mfa_enabled' => $request->boolean('mfa_enabled'),
+        ]);
+
+        ActivityLogger::log('profile_update', "User {$employee->email} updated their profile.", $employee, [
+            'mfa_enabled' => $employee->mfa_enabled,
         ]);
 
         return redirect()->route('profile.show')->with('success', __('Updated successfully'));

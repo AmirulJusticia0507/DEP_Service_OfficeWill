@@ -8,6 +8,7 @@ use App\Helpers\NotificationHelper;
 use App\Mail\PasswordChangedMail;
 use App\Mail\PasswordReissuedMail;
 use App\Models\Employee;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +53,8 @@ class AuthController extends Controller
 
                 app(MfaController::class)->sendOtp($employee);
 
+                ActivityLogger::log('login_mfa_pending', "MFA OTP sent for {$employee->email}.", $employee);
+
                 return redirect()->route('mfa.verify');
             }
 
@@ -60,10 +63,14 @@ class AuthController extends Controller
             $request->session()->forget('mfa.completed');
             $request->session()->regenerate();
 
+            ActivityLogger::log('login', "User {$employee->email} logged in.", $employee);
+
             return redirect()->intended('/dashboard');
         }
 
         $handleFailedLogin->execute($employee);
+
+        ActivityLogger::log('login_failed', "Failed login attempt for {$employee->email}.", $employee);
 
         return back()->withErrors([
             'email' => 'Password salah.',
@@ -72,6 +79,9 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
+        $employee = Auth::guard('employee')->user();
+        ActivityLogger::log('logout', "User {$employee?->email} logged out.", $employee);
+
         Auth::guard('employee')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -99,6 +109,8 @@ class AuthController extends Controller
 
         $employee->update(['password' => Hash::make($data['new_password'])]);
 
+        ActivityLogger::log('password_change', "User {$employee->email} changed their password.", $employee);
+
         Mail::to($employee->email)->send(new PasswordChangedMail($employee->full_name));
 
         NotificationHelper::send(
@@ -123,6 +135,8 @@ class AuthController extends Controller
         }
 
         $newPassword = $reissuePassword->execute($employee);
+
+        ActivityLogger::log('password_reissue', "Password reissued for {$employee->email} by {$employee->email}.", $employee);
 
         Mail::to($employee->email)->send(new PasswordReissuedMail(
             $employee->full_name,

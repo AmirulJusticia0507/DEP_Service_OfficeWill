@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Certificate;
 use App\Models\CourseEnrollment;
+use App\Services\ActivityLogger;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -78,6 +79,12 @@ class CertificateController extends Controller
         } catch (\Throwable $e) {
             Storage::disk('public')->delete($filename);
             throw $e;
+        }
+
+        if ($created) {
+            ActivityLogger::log('certificate_generate', "Generated certificate {$certNumber} for {$employee->full_name}.", $enrollment, [
+                'certificate_number' => $certNumber,
+            ]);
         }
 
         return back()->with(
