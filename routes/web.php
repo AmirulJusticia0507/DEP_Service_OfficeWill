@@ -73,6 +73,9 @@ Route::middleware('auth:employee')->group(function () {
 
     // CRUD resources
     Route::resource('employees', EmployeeController::class)->middleware('permission:can_register_employee');
+    Route::post('employees/{employee}/assignments', [EmployeeController::class, 'storeAssignment'])->name('employees.assignments.store')->middleware('permission:can_register_employee');
+    Route::put('employees/{employee}/assignments/{assignment}', [EmployeeController::class, 'endAssignment'])->name('employees.assignments.end')->middleware('permission:can_register_employee');
+    Route::delete('employees/{employee}/assignments/{assignment}', [EmployeeController::class, 'destroyAssignment'])->name('employees.assignments.destroy')->middleware('permission:can_register_employee');
     Route::resource('courses', CourseController::class)->middleware('permission:can_register_course');
     Route::post('courses/{course}/materials', [CourseController::class, 'storeMaterial'])->name('courses.materials.store')->middleware('permission:can_register_course');
     Route::delete('materials/{material}', [CourseController::class, 'destroyMaterial'])->name('materials.destroy')->middleware('permission:can_register_course');

@@ -39,3 +39,12 @@ Diterapkan di `TodoController` (`submitQuestionnaire`, `submitReport`, `submitTe
    - `UNIQUE(exam_attempt_id, question_id)` pada `exam_answers` — satu jawaban per soal.
 4. **Idempotency**: `updateOrCreate` untuk respons todo (resubmit menimpa, tidak membuat baris baru); `ExamController::start` memakai ulang attempt `IN_PROGRESS` yang masih ada, tidak membuat attempt baru.
 5. **Atomicity**: penulisan jawaban + attempt + status respons todo dalam satu transaksi; file laporan lama dihapus saat diganti, file baru dibersihkan bila transaksi gagal.
+
+## Assignment Period Lock (masa jabatan / periode afiliasi)
+
+Diterapkan di `EmployeeController` (`storeAssignment`, `endAssignment`, `destroyAssignment`):
+
+1. **Authorization**: hanya operator dengan `can_register_employee` dan cakupan `canAccessEmployee` terhadap karyawan tersebut.
+2. **Scope afiliasi**: kode afiliasi wajib milik company yang sama (`exists:...company_id`) dan dalam cakupan operator (`ScopeService::canAccessAffiliation`), selain itu `403`.
+3. **Overlap lock**: periode baru (incl. open-ended `end_date` null) ditolak bila tumpang tindih dengan penugasan yang sudah ada untuk karyawan yang sama — baik kode afiliasi yang sama maupun `job_id` yang sama. Dijalankan di dalam `DB::transaction` dengan `lockForUpdate()` terhadap baris employee sehingga dua create bersamaan tidak bisa lolos.
+4. **Edit after lock**: penugasan yang sudah ditutup (`end_date` terisi) tidak dapat ditutup lagi; `end_date` tidak boleh sebelum `start_date`.

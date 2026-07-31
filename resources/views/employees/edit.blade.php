@@ -8,7 +8,7 @@
 @endsection
 @section('content')
 <div class="max-w-3xl mx-auto">
-    <form method="POST" class="bg-white rounded shadow dark:bg-navy-800" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('employees.update', $employee) }}" class="bg-white rounded shadow dark:bg-navy-800" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -114,5 +114,76 @@
             <a href="{{ route('employees.index') }}" class="btn-secondary">{{ __('Back to List') }}</a>
         </div>
     </form>
+
+    <div class="bg-white rounded shadow dark:bg-navy-800 mt-6">
+        <div class="bg-primary text-white px-4 py-3 rounded-t">
+            <h3 class="text-sm font-semibold">Masa Jabatan & Periode Afiliasi</h3>
+        </div>
+        <div class="p-4 space-y-3">
+            @forelse ($assignments as $ea)
+            <div class="flex items-center justify-between border border-slate-200 dark:border-slate-700 rounded p-3">
+                <div>
+                    <p class="text-sm font-medium">{{ $ea->affiliation->affiliation_name ?? $ea->affiliation_code }}</p>
+                    <p class="text-xs text-slate-500">
+                        {{ $ea->job->job_title ?? '-' }}
+                        &middot; {{ $ea->start_date?->format('d M Y') }} - {{ $ea->end_date?->format('d M Y') ?? 'Sekarang' }}
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    @if (! $ea->end_date)
+                    <form method="POST" action="{{ route('employees.assignments.end', [$employee, $ea]) }}">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn-secondary" onclick="return confirm('Tutup penugasan ini?')">Tutup</button>
+                    </form>
+                    @endif
+                    <form method="POST" action="{{ route('employees.assignments.destroy', [$employee, $ea]) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-rose-500 hover:underline text-xs ml-2" onclick="return confirm('Hapus penugasan ini?')">Hapus</button>
+                    </form>
+                </div>
+            </div>
+            @empty
+            <p class="text-sm text-slate-400">Belum ada penugasan.</p>
+            @endforelse
+        </div>
+
+        <div class="border-t border-slate-200 dark:border-slate-700 p-4">
+            <h4 class="text-sm font-semibold mb-2">Tambah Penugasan</h4>
+            <form method="POST" action="{{ route('employees.assignments.store', $employee) }}" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                @csrf
+                <div>
+                    <label class="block text-sm font-medium mb-1">Afiliasi</label>
+                    <select name="affiliation_code" class="form-select" required>
+                        <option value="">Pilih afiliasi</option>
+                        @foreach ($affiliations as $af)
+                        <option value="{{ $af->affiliation_code }}">{{ $af->affiliation_name }} ({{ $af->affiliation_code }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Jabatan</label>
+                    <select name="job_id" class="form-select">
+                        <option value="">Tidak ada</option>
+                        @foreach ($jobs as $job)
+                        <option value="{{ $job->job_id }}">{{ $job->job_title }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Mulai</label>
+                    <input type="date" name="start_date" required class="form-input">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Berakhir (opsional)</label>
+                    <input type="date" name="end_date" class="form-input">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="btn-primary">Tambah Penugasan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 @endsection

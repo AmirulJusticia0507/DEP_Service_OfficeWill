@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Helpers\NotificationHelper;
 use App\Mail\AccountRegisteredMail;
+use App\Models\Affiliation;
 use App\Models\Employee;
+use App\Models\EmployeeAffiliation;
 use App\Models\MasterJob;
 use App\Services\ScopeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -138,7 +141,16 @@ class EmployeeController extends Controller
         $company = $employee->company;
         $canManageAuthorities = $operator->is_sys_admin;
 
-        return view('employees.edit', compact('employee', 'company', 'canManageAuthorities'));
+        $assignments = $employee->employeeAffiliations()
+            ->orderByDesc('start_date')
+            ->get();
+        $jobs = MasterJob::where('company_id', $company->id)->get();
+        $affiliations = Affiliation::where('company_id', $company->id)
+            ->whereIn('affiliation_code', $this->scope->authorizedAffiliationCodes($operator))
+            ->orderBy('affiliation_name')
+            ->get();
+
+        return view('employees.edit', compact('employee', 'company', 'canManageAuthorities', 'assignments', 'jobs', 'affiliations'));
     }
 
     public function update(Request $request, Employee $employee): RedirectResponse
@@ -197,5 +209,92 @@ class EmployeeController extends Controller
         $employee->update($data);
 
         return redirect('/employees')->with('success', 'Data karyawan berhasil diperbarui.');
+    }
+
+    public function storeAssignment(Request $request, Employee $employee): RedirectResponse
+    {
+        $operator = Auth::guard('employee')->user();
+
+        $this->authorize('update', $employee);
+
+        $data = $request->validate([
+            'affiliation_code' => 'required|exists:affiliations,affiliation_code,company_id,'.$employee->company_id,
+            'job_id' => 'nullable|exists:master_jobs,job_id,company_id,'.$employee->company_id,
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        if (! $this->scope->canAccessAffiliation($operator, $data['affiliation_code'])) {
+            abort(403);
+        }
+
+        $conflict = DB::transaction(function () use ($employee, $data) {
+            Employee::whereKey($employee->id)->lockForUpdate()->first();
+
+            return EmployeeAffiliation::where('employee_id', $employee->id)
+                ->where(function ($q) use ($data) {
+                    $q->where('affiliation_code', $data['affiliation_code']);
+                    if (! empty($data['job_id'])) {
+                        $q->orWhere('job_id', $data['job_id']);
+                    }
+                })
+                ->overlapping($data['start_date'], $data['end_date'])
+                ->exists();
+        });
+
+        if ($conflict) {
+            return back()->with('error', 'Periode penugasan tumpang tindih dengan penugasan yang sudah ada.');
+        }
+
+        EmployeeAffiliation::create([
+            'company_id' => $employee->company_id,
+            'employee_id' => $employee->id,
+            'affiliation_code' => $data['affiliation_code'],
+            'job_id' => $data['job_id'] ?? null,
+            'start_date' => $data['start_date'],
+            'end_date' => $data['end_date'] ?? null,
+        ]);
+
+        return back()->with('success', 'Penugasan berhasil ditambahkan.');
+    }
+
+    public function endAssignment(Request $request, Employee $employee, EmployeeAffiliation $assignment): RedirectResponse
+    {
+        $this->authorize('update', $employee);
+
+        if ($assignment->employee_id !== $employee->id) {
+            abort(404);
+        }
+
+        if ($assignment->end_date !== null) {
+            return back()->with('error', 'Penugasan ini sudah ditutup.');
+        }
+
+        $data = $request->validate([
+            'end_date' => 'nullable|date',
+        ]);
+
+        $endDate = $data['end_date'] ?? now()->toDateString();
+
+        if ($endDate < $assignment->start_date->toDateString()) {
+            return back()->with('error', 'Tanggal penutupan tidak boleh sebelum tanggal mulai.');
+        }
+
+        $assignment->update(['end_date' => $endDate]);
+
+        return back()->with('success', 'Penugasan berhasil ditutup.');
+    }
+
+    public function destroyAssignment(Employee $employee, EmployeeAffiliation $assignment): RedirectResponse
+    {
+        $this->authorize('update', $employee);
+
+        if ($assignment->employee_id !== $employee->id) {
+            abort(404);
+        }
+
+        $assignment->delete();
+
+        return back()->with('success', 'Penugasan berhasil dihapus.');
     }
 }
