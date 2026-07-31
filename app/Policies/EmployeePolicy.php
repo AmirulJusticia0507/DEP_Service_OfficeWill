@@ -3,9 +3,14 @@
 namespace App\Policies;
 
 use App\Models\Employee;
+use App\Services\ScopeService;
 
 class EmployeePolicy
 {
+    public function __construct(
+        private ScopeService $scope
+    ) {}
+
     public function viewAny(Employee $user): bool
     {
         return $user->hasPermission('can_register_employee');
@@ -14,7 +19,7 @@ class EmployeePolicy
     public function view(Employee $user, Employee $employee): bool
     {
         return $user->hasPermission('can_register_employee')
-            && $employee->company_id === $user->company_id;
+            && $this->scope->canAccessEmployee($user, $employee);
     }
 
     public function create(Employee $user): bool
@@ -25,13 +30,13 @@ class EmployeePolicy
     public function update(Employee $user, Employee $employee): bool
     {
         return $user->hasPermission('can_register_employee')
-            && $employee->company_id === $user->company_id;
+            && $this->scope->canAccessEmployee($user, $employee);
     }
 
     public function delete(Employee $user, Employee $employee): bool
     {
         return $user->hasPermission('can_register_employee')
-            && $employee->company_id === $user->company_id
+            && $this->scope->canAccessEmployee($user, $employee)
             && $employee->id !== $user->id;
     }
 
@@ -43,7 +48,7 @@ class EmployeePolicy
     public function manageAuthority(Employee $user, Employee $employee): bool
     {
         return $user->isAdmin()
-            && $employee->company_id === $user->company_id
+            && $this->scope->canAccessEmployee($user, $employee)
             && $employee->id !== $user->id;
     }
 }

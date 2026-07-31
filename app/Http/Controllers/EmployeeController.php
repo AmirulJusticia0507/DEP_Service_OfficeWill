@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Employee\FilterEmployeeByScopeAction;
 use App\Helpers\NotificationHelper;
 use App\Mail\AccountRegisteredMail;
 use App\Models\Employee;
 use App\Models\MasterJob;
+use App\Services\ScopeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +18,7 @@ use Illuminate\Support\Str;
 class EmployeeController extends Controller
 {
     public function __construct(
-        private FilterEmployeeByScopeAction $filterScope
+        private ScopeService $scope
     ) {}
 
     public function index(Request $request)
@@ -27,9 +27,10 @@ class EmployeeController extends Controller
 
         $this->authorize('viewAny', Employee::class);
 
-        $query = Employee::query()->where('company_id', $operator->company_id);
-
-        $query = $this->filterScope->execute($query, $operator);
+        $query = $this->scope->scopeEmployeeQuery(
+            Employee::query()->where('company_id', $operator->company_id),
+            $operator
+        );
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {

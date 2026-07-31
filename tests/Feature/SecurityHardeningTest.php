@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Affiliation;
 use App\Models\Company;
 use App\Models\Employee;
+use App\Models\EmployeeAffiliation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -31,6 +33,22 @@ class SecurityHardeningTest extends TestCase
             'is_sys_admin' => false,
             'account_status' => 'ACTIVE',
         ], $overrides));
+    }
+
+    private function attachAffiliation(Company $company, Employee $employee, string $code): void
+    {
+        Affiliation::firstOrCreate([
+            'company_id' => $company->id,
+            'affiliation_code' => $code,
+        ], ['affiliation_name' => $code]);
+
+        EmployeeAffiliation::create([
+            'company_id' => $company->id,
+            'employee_id' => $employee->id,
+            'affiliation_code' => $code,
+            'start_date' => now()->toDateString(),
+            'end_date' => null,
+        ]);
     }
 
     public function test_api_employee_endpoint_is_closed(): void
@@ -109,8 +127,14 @@ class SecurityHardeningTest extends TestCase
     public function test_non_sys_admin_cannot_escalate_via_employee_update(): void
     {
         $company = $this->makeCompany();
-        $operator = $this->makeEmployee($company, ['can_register_employee' => true]);
+        $operator = $this->makeEmployee($company, [
+            'can_register_employee' => true,
+            'authority_effective_range' => 'ONLY',
+            'authority_effective_affiliation_code' => 'HRD',
+        ]);
         $target = $this->makeEmployee($company);
+        $this->attachAffiliation($company, $operator, 'HRD');
+        $this->attachAffiliation($company, $target, 'HRD');
 
         $this->actingAs($operator, 'employee')
             ->put('/employees/'.$target->id, [

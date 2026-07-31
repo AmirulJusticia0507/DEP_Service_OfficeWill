@@ -3,17 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\NotificationHelper;
+use App\Mail\CourseCancelledMail;
 use App\Mail\CourseConfirmationMail;
 use App\Models\CourseEnrollment;
+use App\Services\ScopeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class EnrollmentController extends Controller
 {
+    public function __construct(
+        private ScopeService $scope
+    ) {}
+
     public function index(Request $request)
     {
-        $query = CourseEnrollment::with('course', 'employee');
+        $operator = Auth::guard('employee')->user();
+
+        $query = $this->scope->scopeEnrollmentQuery(CourseEnrollment::with('course', 'employee'), $operator);
 
         if ($courseId = $request->get('course_id')) {
             $query->where('course_id', $courseId);
@@ -34,6 +43,10 @@ class EnrollmentController extends Controller
 
     public function update(Request $request, CourseEnrollment $enrollment): RedirectResponse
     {
+        $operator = Auth::guard('employee')->user();
+
+        abort_unless($this->scope->canAccessEnrollment($operator, $enrollment), 403);
+
         $data = $request->validate([
             'status' => 'required|in:ENROLLED,COMPLETED,CANCELLED',
             'enrollment_deadline' => 'nullable|date',
@@ -46,7 +59,7 @@ class EnrollmentController extends Controller
             $enrollment->load(['employee', 'course']);
             $employee = $enrollment->employee;
             if ($employee && $employee->email) {
-                Mail::to($employee->email)->queue(new \App\Mail\CourseCancelledMail(
+                Mail::to($employee->email)->queue(new CourseCancelledMail(
                     $employee->full_name,
                     $enrollment->course->course_name
                 ));
@@ -65,6 +78,10 @@ class EnrollmentController extends Controller
 
     public function sendConfirmation(CourseEnrollment $enrollment): RedirectResponse
     {
+        $operator = Auth::guard('employee')->user();
+
+        abort_unless($this->scope->canAccessEnrollment($operator, $enrollment), 403);
+
         $enrollment->load(['employee', 'course']);
         $employee = $enrollment->employee;
 
@@ -72,7 +89,7 @@ class EnrollmentController extends Controller
             Mail::to($employee->email)->queue(new CourseConfirmationMail(
                 $employee->full_name,
                 $enrollment->course->course_name,
-                $enrollment->enrollment_deadline ? (string)$enrollment->enrollment_deadline : '-',
+                $enrollment->enrollment_deadline ? (string) $enrollment->enrollment_deadline : '-',
                 route('attendance.show', $enrollment->course_id),
                 $enrollment->status
             ));
@@ -93,11 +110,15 @@ class EnrollmentController extends Controller
 
     public function sendCancellation(CourseEnrollment $enrollment): RedirectResponse
     {
+        $operator = Auth::guard('employee')->user();
+
+        abort_unless($this->scope->canAccessEnrollment($operator, $enrollment), 403);
+
         $enrollment->load(['employee', 'course']);
         $employee = $enrollment->employee;
 
         if ($employee && $employee->email) {
-            Mail::to($employee->email)->queue(new \App\Mail\CourseCancelledMail(
+            Mail::to($employee->email)->queue(new CourseCancelledMail(
                 $employee->full_name,
                 $enrollment->course->course_name
             ));
@@ -117,12 +138,16 @@ class EnrollmentController extends Controller
 
     public function destroy(CourseEnrollment $enrollment): RedirectResponse
     {
+        $operator = Auth::guard('employee')->user();
+
+        abort_unless($this->scope->canAccessEnrollment($operator, $enrollment), 403);
+
         $enrollment->load(['employee', 'course']);
         $enrollment->update(['status' => 'CANCELLED']);
 
         $employee = $enrollment->employee;
         if ($employee && $employee->email) {
-            Mail::to($employee->email)->queue(new \App\Mail\CourseCancelledMail(
+            Mail::to($employee->email)->queue(new CourseCancelledMail(
                 $employee->full_name,
                 $enrollment->course->course_name
             ));

@@ -78,8 +78,8 @@ Route::middleware('auth:employee')->group(function () {
     Route::delete('materials/{material}', [CourseController::class, 'destroyMaterial'])->name('materials.destroy')->middleware('permission:can_register_course');
     Route::post('courses/{course}/todos', [CourseController::class, 'storeTodo'])->name('courses.todos.store')->middleware('permission:can_register_course');
     Route::delete('todos/{todo}', [CourseController::class, 'destroyTodo'])->name('todos.destroy')->middleware('permission:can_register_course');
-    Route::resource('enrollments', EnrollmentController::class)->except(['create', 'store']);
-    Route::post('enrollments/{enrollment}/send-confirmation', [EnrollmentController::class, 'sendConfirmation'])->name('enrollments.send-confirmation');
+    Route::resource('enrollments', EnrollmentController::class)->except(['create', 'store'])->middleware('permission:can_register_course');
+    Route::post('enrollments/{enrollment}/send-confirmation', [EnrollmentController::class, 'sendConfirmation'])->name('enrollments.send-confirmation')->middleware('permission:can_register_course');
 
     // Attendance & completion
     Route::get('attendance', [AttendanceController::class, 'index'])->name('attendance.index');
