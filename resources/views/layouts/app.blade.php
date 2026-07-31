@@ -205,6 +205,9 @@
                 @if (session('error'))
                     <div class="bg-rose-100 text-rose-800 px-4 py-3 rounded mb-4 text-sm border-l-4 border-rose-500 dark:bg-rose-900 dark:text-rose-200">{{ session('error') }}</div>
                 @endif
+                @if (session('info'))
+                    <div class="bg-sky-100 text-sky-800 px-4 py-3 rounded mb-4 text-sm border-l-4 border-sky-500 dark:bg-sky-900 dark:text-sky-200">{{ session('info') }}</div>
+                @endif
 
                 @yield('content')
             </main>
