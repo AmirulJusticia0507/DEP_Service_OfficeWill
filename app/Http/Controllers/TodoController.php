@@ -9,6 +9,8 @@ use App\Models\CourseTodoResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TodoController extends Controller
 {
@@ -24,18 +26,27 @@ class TodoController extends Controller
             ->where('employee_id', $employee->id)
             ->firstOrFail();
 
-        $response = CourseTodoResponse::updateOrCreate(
-            [
-                'enrollment_id' => $enrollment->id,
-                'course_todo_id' => $todo->id,
-            ],
-            [
-                'response_content' => $request->input('response_content'),
-                'status' => 'PASSED',
-            ]
-        );
+        return DB::transaction(function () use ($request, $enrollment, $todo) {
+            $locked = CourseEnrollment::whereKey($enrollment->id)->lockForUpdate()->first();
 
-        return back()->with('success', 'Kuesioner berhasil dikirim.');
+            $lockReason = $locked->submissionLockReason();
+            if ($lockReason !== null) {
+                return back()->with('error', $lockReason);
+            }
+
+            CourseTodoResponse::updateOrCreate(
+                [
+                    'enrollment_id' => $locked->id,
+                    'course_todo_id' => $todo->id,
+                ],
+                [
+                    'response_content' => $request->input('response_content'),
+                    'status' => 'PASSED',
+                ]
+            );
+
+            return back()->with('success', 'Kuesioner berhasil dikirim.');
+        });
     }
 
     public function submitReport(Request $request, CourseTodo $todo): RedirectResponse
@@ -49,18 +60,42 @@ class TodoController extends Controller
         $file = $request->file('report_file');
         $path = $file ? $file->store('reports') : null;
 
-        $response = CourseTodoResponse::updateOrCreate(
-            [
-                'enrollment_id' => $enrollment->id,
-                'course_todo_id' => $todo->id,
-            ],
-            [
-                'response_content' => $path,
-                'status' => 'PASSED',
-            ]
-        );
+        try {
+            return DB::transaction(function () use ($path, $enrollment, $todo) {
+                $locked = CourseEnrollment::whereKey($enrollment->id)->lockForUpdate()->first();
 
-        return back()->with('success', 'Laporan berhasil diunggah.');
+                $lockReason = $locked->submissionLockReason();
+                if ($lockReason !== null) {
+                    return back()->with('error', $lockReason);
+                }
+
+                $previous = CourseTodoResponse::where('enrollment_id', $locked->id)
+                    ->where('course_todo_id', $todo->id)
+                    ->value('response_content');
+
+                CourseTodoResponse::updateOrCreate(
+                    [
+                        'enrollment_id' => $locked->id,
+                        'course_todo_id' => $todo->id,
+                    ],
+                    [
+                        'response_content' => $path,
+                        'status' => 'PASSED',
+                    ]
+                );
+
+                if ($previous !== null && $previous !== $path) {
+                    Storage::delete($previous);
+                }
+
+                return back()->with('success', 'Laporan berhasil diunggah.');
+            });
+        } catch (\Throwable $e) {
+            if ($path !== null) {
+                Storage::delete($path);
+            }
+            throw $e;
+        }
     }
 
     public function submitTest(Request $request, CourseTodo $todo): RedirectResponse
@@ -73,20 +108,30 @@ class TodoController extends Controller
 
         $score = (int) $request->input('score', 0);
 
-        $response = CourseTodoResponse::firstOrCreate(
-            [
-                'enrollment_id' => $enrollment->id,
-                'course_todo_id' => $todo->id,
-            ]
-        );
+        return DB::transaction(function () use ($score, $enrollment, $todo) {
+            $locked = CourseEnrollment::whereKey($enrollment->id)->lockForUpdate()->first();
 
-        $this->evaluateTest->execute($todo, $response, $score);
+            $lockReason = $locked->submissionLockReason();
+            if ($lockReason !== null) {
+                return back()->with('error', $lockReason);
+            }
 
-        $passed = $response->fresh()->status === 'PASSED';
+            $response = CourseTodoResponse::updateOrCreate(
+                [
+                    'enrollment_id' => $locked->id,
+                    'course_todo_id' => $todo->id,
+                ],
+                []
+            );
 
-        return back()->with(
-            $passed ? 'success' : 'error',
-            $passed ? 'Nilai ' . $score . ' — Lulus!' : 'Nilai ' . $score . ' — Tidak lulus.'
-        );
+            $this->evaluateTest->execute($todo, $response, $score);
+
+            $passed = $response->fresh()->status === 'PASSED';
+
+            return back()->with(
+                $passed ? 'success' : 'error',
+                $passed ? 'Nilai '.$score.' — Lulus!' : 'Nilai '.$score.' — Tidak lulus.'
+            );
+        });
     }
 }

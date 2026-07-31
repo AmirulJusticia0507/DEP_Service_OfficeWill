@@ -86,6 +86,11 @@ class AttendanceController extends Controller
             abort(403);
         }
 
+        // Idempotency fast-fail: sudah pernah diselesaikan.
+        if ($this->alreadyCompleted($enrollment, $employee->id)) {
+            return redirect('/attendance')->with('info', 'Kursus ini sudah selesai dikerjakan.');
+        }
+
         $allPassed = $enrollment->todoResponses()
             ->where('status', 'FAILED')
             ->doesntExist();
@@ -94,15 +99,10 @@ class AttendanceController extends Controller
             return back()->with('error', 'Selesaikan semua todo terlebih dahulu.');
         }
 
-        // Business lock: tidak bisa diselesaikan setelah deadline (edit after lock).
-        if ($enrollment->enrollment_deadline !== null
-            && Carbon::parse($enrollment->enrollment_deadline)->lt(Carbon::today())) {
-            return back()->with('error', 'Deadline kursus telah lewat. Hubungi admin untuk perpanjangan.');
-        }
-
-        // Idempotency fast-fail: sudah pernah diselesaikan.
-        if ($this->alreadyCompleted($enrollment, $employee->id)) {
-            return redirect('/attendance')->with('info', 'Kursus ini sudah selesai dikerjakan.');
+        // Business lock (status + deadline).
+        $lockReason = $enrollment->submissionLockReason();
+        if ($lockReason !== null) {
+            return back()->with('error', $lockReason);
         }
 
         $certNumber = 'OW-YOG-'.str_pad($enrollment->id, 5, '0', STR_PAD_LEFT).'-'.now()->format('Ymd');

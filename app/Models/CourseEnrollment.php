@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class CourseEnrollment extends Model
@@ -12,6 +13,20 @@ class CourseEnrollment extends Model
         'enrollment_deadline',
         'status',
     ];
+
+    public function submissionLockReason(): ?string
+    {
+        if ($this->status !== 'ENROLLED') {
+            return 'Kursus sudah tidak aktif (selesai atau dibatalkan).';
+        }
+
+        if ($this->enrollment_deadline !== null
+            && Carbon::parse($this->enrollment_deadline)->lt(Carbon::today())) {
+            return 'Deadline kursus telah lewat.';
+        }
+
+        return null;
+    }
 
     public function course()
     {
