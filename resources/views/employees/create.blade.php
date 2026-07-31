@@ -19,44 +19,53 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium mb-1"><x-required-mark /> {{ __('Code') }}</label>
-                    <input type="text" name="employee_code" required class="form-input">
+                    <input type="text" name="employee_code" value="{{ old('employee_code') }}" required class="form-input @error('employee_code') border-red-mark @enderror">
+                    <x-field-error field="employee_code" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1"><x-required-mark /> {{ __('Name') }}</label>
-                    <input type="text" name="full_name" required class="form-input">
+                    <input type="text" name="full_name" value="{{ old('full_name') }}" required class="form-input @error('full_name') border-red-mark @enderror">
+                    <x-field-error field="full_name" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">{{ __('Name') }} (Kana)</label>
-                    <input type="text" name="kana_name" class="form-input">
+                    <input type="text" name="kana_name" value="{{ old('kana_name') }}" class="form-input @error('kana_name') border-red-mark @enderror">
+                    <x-field-error field="kana_name" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1"><x-required-mark /> {{ __('Email') }}</label>
-                    <input type="email" name="email" required class="form-input">
+                    <input type="email" name="email" value="{{ old('email') }}" required class="form-input @error('email') border-red-mark @enderror">
+                    <x-field-error field="email" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">{{ __('Phone') }}</label>
-                    <input type="text" name="phone_number" class="form-input">
+                    <input type="text" name="phone_number" value="{{ old('phone_number') }}" class="form-input @error('phone_number') border-red-mark @enderror">
+                    <x-field-error field="phone_number" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">{{ __('Place of Birth') }}</label>
-                    <input type="text" name="place_of_birth" class="form-input">
+                    <input type="text" name="place_of_birth" value="{{ old('place_of_birth') }}" class="form-input @error('place_of_birth') border-red-mark @enderror">
+                    <x-field-error field="place_of_birth" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">{{ __('Date of Birth') }}</label>
-                    <input type="date" name="date_of_birth" class="form-input">
+                    <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" class="form-input @error('date_of_birth') border-red-mark @enderror">
+                    <x-field-error field="date_of_birth" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">{{ __('Gender') }}</label>
-                    <select name="gender" class="form-select">
+                    <select name="gender" class="form-select @error('gender') border-red-mark @enderror">
                         <option value="">{{ __('Please select') }}</option>
-                        <option value="MALE">{{ __('Male') }}</option>
-                        <option value="FEMALE">{{ __('Female') }}</option>
+                        <option value="MALE" @selected(old('gender') === 'MALE')>{{ __('Male') }}</option>
+                        <option value="FEMALE" @selected(old('gender') === 'FEMALE')>{{ __('Female') }}</option>
                     </select>
+                    <x-field-error field="gender" />
                 </div>
             </div>
             <div>
                 <label class="block text-sm font-medium mb-1">{{ __('Address') }}</label>
-                <textarea name="address" rows="2" class="form-input"></textarea>
+                <textarea name="address" rows="2" class="form-input @error('address') border-red-mark @enderror">{{ old('address') }}</textarea>
+                <x-field-error field="address" />
             </div>
         </div>
 
@@ -68,15 +77,17 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">Cakupan Wewenang</label>
-                    <select name="authority_effective_range" class="form-select">
-                        <option value="ONLY">Afiliasi sendiri</option>
-                        <option value="BELOW">Afiliasi & sub-afiliasi</option>
-                        <option value="ALL">Semua afiliasi</option>
+                    <select name="authority_effective_range" class="form-select @error('authority_effective_range') border-red-mark @enderror">
+                        <option value="ONLY" @selected(old('authority_effective_range') === 'ONLY')>Afiliasi sendiri</option>
+                        <option value="BELOW" @selected(old('authority_effective_range') === 'BELOW')>Afiliasi & sub-afiliasi</option>
+                        <option value="ALL" @selected(old('authority_effective_range') === 'ALL')>Semua afiliasi</option>
                     </select>
+                    <x-field-error field="authority_effective_range" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Kode Afiliasi Wewenang</label>
-                    <input type="text" name="authority_effective_affiliation_code" class="form-input">
+                    <input type="text" name="authority_effective_affiliation_code" value="{{ old('authority_effective_affiliation_code') }}" class="form-input @error('authority_effective_affiliation_code') border-red-mark @enderror">
+                    <x-field-error field="authority_effective_affiliation_code" />
                 </div>
             </div>
         </div>
