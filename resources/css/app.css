@@ -281,6 +281,56 @@
     background-color: #475569;
 }
 
+.btn-sm {
+    padding: 3px 10px;
+    font-size: 11px;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-sm-edit {
+    background-color: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-sm-edit:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn-sm-delete {
+    background-color: transparent;
+    border: 1px solid #f43f5e;
+    color: #f43f5e;
+}
+
+.btn-sm-delete:hover {
+    background-color: #f43f5e;
+    color: white;
+}
+
+.dark .btn-sm-edit {
+    color: #a5c8ff;
+    border-color: #a5c8ff;
+}
+
+.dark .btn-sm-edit:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+.dark .btn-sm-delete {
+    color: #fda4af;
+    border-color: #fda4af;
+}
+
+.dark .btn-sm-delete:hover {
+    background-color: #f43f5e;
+    color: white;
+}
+
 .status-badge {
     display: inline-block;
     padding: 2px 8px;

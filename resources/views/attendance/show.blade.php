@@ -19,7 +19,7 @@
         </div>
         <div>
             <span class="text-xs text-slate-400">{{ __('Status') }}</span>
-            <p>@include('components.status-badge', ['status' => $enrollment->status])</p>
+            <p><x-status-badge status="{{ $enrollment->status }}">{{ $enrollment->status }}</x-status-badge></p>
         </div>
         <div>
             <span class="text-xs text-slate-400">Progress</span>

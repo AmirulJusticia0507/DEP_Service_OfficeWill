@@ -11,4 +11,4 @@
     }
 @endphp
 
-<span class="{{ $classes }}">{{ $slot }}</span>
+<span class="{{ $classes }}">{{ $slot ?? '' }}</span>

@@ -16,25 +16,26 @@
 
 <div class="space-y-6">
     @forelse ($categories as $cat)
-    <div class="bg-white dark:bg-navy-800 shadow rounded">
-        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-b dark:border-slate-700">
+    <div class="bg-white dark:bg-navy-800 shadow rounded overflow-hidden">
+        <div class="tree-toggle flex items-center justify-between px-4 py-3 cursor-pointer border-b border-slate-200 dark:border-b dark:border-slate-700 select-none">
             <div class="flex items-center gap-2">
+                <svg class="tree-arrow w-4 h-4 shrink-0 transition-transform duration-200 {{ $loop->first ? 'rotate-90' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 @if($cat->icon)
                     <img src="{{ asset('storage/' . $cat->icon) }}" class="w-6 h-6 object-contain">
                 @endif
                 <strong class="text-sm">{{ $cat->category_name }}</strong>
                 <span class="text-xs text-slate-400 dark:text-slate-500 ml-2">({{ $cat->category_code }})</span>
             </div>
-            <div class="flex gap-2">
-                <a href="{{ route('admin.course-categories.edit', $cat) }}" class="text-primary hover:underline text-xs font-medium">Edit</a>
+            <div class="flex items-center gap-2" onclick="event.stopPropagation()">
+                <a href="{{ route('admin.course-categories.edit', $cat) }}" class="btn-sm btn-sm-edit inline-block">Edit</a>
                 <form method="POST" action="{{ route('admin.course-categories.destroy', $cat) }}" class="inline" onsubmit="return confirm('Hapus kategori ini?')">
                     @csrf @method('DELETE')
-                    <button class="text-rose-500 hover:underline text-xs">Delete</button>
+                    <button type="submit" class="btn-sm btn-sm-delete">Delete</button>
                 </form>
             </div>
         </div>
 
-        <div class="p-4">
+        <div class="tree-children p-4 {{ $loop->first ? '' : 'hidden' }}">
             <form method="POST" action="{{ route('admin.course-categories.details.store', $cat) }}" enctype="multipart/form-data" class="flex flex-wrap gap-2 mb-4 items-end">
                 @csrf
                 <div>
